@@ -1,22 +1,28 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/auth/presentation/login_screen.dart';
 import 'package:moneymate/src/features/auth/presentation/register_screen.dart';
+import 'package:moneymate/src/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:moneymate/src/features/expenses/presentation/add_expense_screen.dart';
+import 'package:moneymate/src/features/expenses/presentation/expenses_list_screen.dart';
 import 'package:moneymate/src/features/onboarding/presentation/accept_invite_screen.dart';
 import 'package:moneymate/src/features/onboarding/presentation/invite_partner_screen.dart';
+import 'package:moneymate/src/features/settings/presentation/privacy_settings_screen.dart';
+import 'package:moneymate/src/features/settings/presentation/settings_screen.dart';
+import 'package:moneymate/src/features/subscription/presentation/paywall_screen.dart';
 
 part 'app_router.g.dart';
 
 @riverpod
 GoRouter goRouter(GoRouterRef ref) {
   final authState = ref.watch(authStateChangesProvider);
+  final user = authState.valueOrNull;
 
   return GoRouter(
     initialLocation: '/login',
     redirect: (context, state) {
-      final isLoggedIn = authState.valueOrNull != null;
+      final isLoggedIn = user != null;
       final isAuthRoute = state.matchedLocation == '/login' ||
           state.matchedLocation == '/register';
 
@@ -35,9 +41,25 @@ GoRouter goRouter(GoRouterRef ref) {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => const Scaffold(
-          body: Center(child: Text('Home — Coming soon')),
+        builder: (context, state) {
+          final coupleId = user?.coupleId ?? '';
+          return DashboardScreen(coupleId: coupleId);
+        },
+      ),
+      GoRoute(
+        path: '/add-expense/:coupleId',
+        builder: (context, state) => AddExpenseScreen(
+          coupleId: state.pathParameters['coupleId']!,
         ),
+      ),
+      GoRoute(
+        path: '/expenses/:coupleId',
+        builder: (context, state) {
+          final coupleId = state.pathParameters['coupleId']!;
+          final month = state.uri.queryParameters['month'] ??
+              _currentMonth();
+          return ExpensesListScreen(coupleId: coupleId, month: month);
+        },
       ),
       GoRoute(
         path: '/invite',
@@ -49,6 +71,26 @@ GoRouter goRouter(GoRouterRef ref) {
           initialCode: state.uri.queryParameters['code'],
         ),
       ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/privacy',
+        builder: (context, state) {
+          final coupleId = user?.coupleId ?? '';
+          return PrivacySettingsScreen(coupleId: coupleId);
+        },
+      ),
+      GoRoute(
+        path: '/subscription',
+        builder: (context, state) => const PaywallScreen(),
+      ),
     ],
   );
+}
+
+String _currentMonth() {
+  final now = DateTime.now();
+  return '${now.year}-${now.month.toString().padLeft(2, '0')}';
 }
