@@ -3,10 +3,49 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
+  "functions": {
+    "source": "functions"
+  },
   "emulators": {
-    "auth": { "port": 9099 },
-    "firestore": { "port": 8080 },
-    "functions": { "port": 5001 },
-    "ui": { "enabled": true }
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true
+    }
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "moneymate-97d1c",
+          "appId": "1:213728801471:android:81dfae8564f1495c12cc0a",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "moneymate-97d1c",
+          "appId": "1:213728801471:ios:ac96fd6f6e48fb0612cc0a",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "moneymate-97d1c",
+          "configurations": {
+            "android": "1:213728801471:android:81dfae8564f1495c12cc0a",
+            "ios": "1:213728801471:ios:ac96fd6f6e48fb0612cc0a"
+          }
+        }
+      }
+    }
   }
 }

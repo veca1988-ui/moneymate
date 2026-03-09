@@ -41,3 +41,8 @@ pubspec.lock
 
 # Firebase
 .firebase/
+
+# Android signing
+key.properties
+*.jks
+*.keystore
