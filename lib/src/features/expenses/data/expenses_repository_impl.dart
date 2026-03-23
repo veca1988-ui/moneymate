@@ -100,7 +100,7 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
 
     return snapshot.docs.fold<double>(
       0,
-      (sum, doc) => sum + (doc.data()['amount'] as num).toDouble(),
+      (total, doc) => total + (doc.data()['amount'] as num).toDouble(),
     );
   }
 }

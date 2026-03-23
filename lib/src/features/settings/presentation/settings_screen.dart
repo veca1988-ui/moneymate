@@ -62,7 +62,7 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading:
                 const Icon(Icons.delete_forever, color: AppColors.expense),
-            title: Text(
+            title: const Text(
               'Delete Account',
               style: TextStyle(color: AppColors.expense),
             ),

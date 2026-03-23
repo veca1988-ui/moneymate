@@ -25,23 +25,7 @@ final subscriptionRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SubscriptionRepositoryRef = ProviderRef<SubscriptionRepository>;
-String _$customerInfoHash() => r'fedcb6abd9f8f11c6b507d7fe08fe8e4c2c8ecfd';
-
-/// See also [customerInfo].
-@ProviderFor(customerInfo)
-final customerInfoProvider = AutoDisposeStreamProvider<CustomerInfo>.internal(
-  customerInfo,
-  name: r'customerInfoProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$customerInfoHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef CustomerInfoRef = AutoDisposeStreamProviderRef<CustomerInfo>;
-String _$isPremiumHash() => r'4f99e289cec6045ebf70f042636cd617fc1852e1';
+String _$isPremiumHash() => r'278fb4d61981ebdc95aad9e9015ff441ec1503e8';
 
 /// See also [isPremium].
 @ProviderFor(isPremium)
