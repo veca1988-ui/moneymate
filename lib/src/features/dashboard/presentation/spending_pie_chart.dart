@@ -4,7 +4,7 @@ import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
 
 class SpendingPieChart extends StatelessWidget {
-  const SpendingPieChart({super.key, required this.categoryTotals});
+  const SpendingPieChart({required this.categoryTotals, super.key});
   final Map<String, double> categoryTotals;
 
   @override

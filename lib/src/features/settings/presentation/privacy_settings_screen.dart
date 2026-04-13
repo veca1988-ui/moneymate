@@ -6,7 +6,7 @@ import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/onboarding/data/couples_repository_impl.dart';
 
 class PrivacySettingsScreen extends ConsumerStatefulWidget {
-  const PrivacySettingsScreen({super.key, required this.coupleId});
+  const PrivacySettingsScreen({required this.coupleId, super.key});
   final String coupleId;
 
   @override
@@ -14,8 +14,7 @@ class PrivacySettingsScreen extends ConsumerStatefulWidget {
       _PrivacySettingsScreenState();
 }
 
-class _PrivacySettingsScreenState
-    extends ConsumerState<PrivacySettingsScreen> {
+class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
   static const _categories = [
     'Groceries',
     'Dining',

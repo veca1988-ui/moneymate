@@ -5,9 +5,9 @@ import 'package:moneymate/src/features/budgets/domain/budget.dart';
 
 class BudgetProgressCard extends StatelessWidget {
   const BudgetProgressCard({
-    super.key,
     required this.budget,
     required this.spent,
+    super.key,
   });
 
   final Budget budget;

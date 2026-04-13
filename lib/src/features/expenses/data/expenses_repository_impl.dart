@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
 import 'package:moneymate/src/features/expenses/domain/expenses_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'expenses_repository_impl.g.dart';
 

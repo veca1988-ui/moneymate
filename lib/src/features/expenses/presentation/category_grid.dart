@@ -4,9 +4,9 @@ import 'package:moneymate/src/constants/app_sizes.dart';
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({
-    super.key,
     required this.selectedCategory,
     required this.onCategorySelected,
+    super.key,
   });
 
   final String? selectedCategory;

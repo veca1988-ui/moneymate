@@ -23,7 +23,7 @@ void main() {
     test('toJson and fromJson roundtrip preserves data', () {
       final expense = Expense(
         id: '1',
-        amount: 42.0,
+        amount: 42,
         category: 'Dining',
         date: DateTime(2026, 3, 5),
         userId: 'user1',
@@ -41,7 +41,7 @@ void main() {
     test('copyWith creates modified copy', () {
       final expense = Expense(
         id: '1',
-        amount: 10.0,
+        amount: 10,
         category: 'Other',
         date: DateTime(2026, 3, 5),
         userId: 'user1',
@@ -49,7 +49,7 @@ void main() {
         createdAt: DateTime(2026, 3, 5),
       );
 
-      final modified = expense.copyWith(amount: 20.0);
+      final modified = expense.copyWith(amount: 20);
 
       expect(modified.amount, 20.0);
       expect(modified.id, '1');
