@@ -5,12 +5,15 @@ import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/auth/presentation/auth_controller.dart';
+import 'package:moneymate/src/features/onboarding/data/couples_repository_impl.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authStateChangesProvider).valueOrNull;
+    final coupleId = user?.coupleId ?? '';
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
@@ -40,7 +43,7 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.link_off),
             title: const Text('Unlink Partner'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showUnlinkDialog(context),
+            onTap: () => _showUnlinkDialog(context, ref, coupleId),
           ),
           const Divider(),
           const _SectionHeader(title: 'Subscription'),
@@ -73,7 +76,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showUnlinkDialog(BuildContext context) {
+  void _showUnlinkDialog(BuildContext context, WidgetRef ref, String coupleId) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -88,9 +91,22 @@ class SettingsScreen extends ConsumerWidget {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              // TODO: Call couplesRepository.unlinkPartner()
+              if (coupleId.isNotEmpty) {
+                final userId =
+                    ref.read(firebaseAuthRepositoryProvider).currentUserId!;
+                await ref
+                    .read(couplesRepositoryProvider)
+                    .unlinkPartner(coupleId, userId);
+                ref.invalidate(authStateChangesProvider);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Partner unlinked successfully')),
+                  );
+                }
+              }
             },
             child: const Text('Unlink'),
           ),
