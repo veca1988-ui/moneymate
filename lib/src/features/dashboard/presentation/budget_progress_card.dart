@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
 import 'package:moneymate/src/features/budgets/domain/budget.dart';
+import 'package:moneymate/src/utils/currency_helper.dart';
 
 class BudgetProgressCard extends StatelessWidget {
   const BudgetProgressCard({
     required this.budget,
     required this.spent,
+    required this.currency,
     super.key,
   });
 
   final Budget budget;
   final double spent;
+  final String currency;
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +44,8 @@ class BudgetProgressCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 Text(
-                  '\$${spent.toStringAsFixed(2)} / '
-                  '\$${budget.limit.toStringAsFixed(2)}',
+                  '${CurrencyHelper.formatAmount(spent, currency)} / '
+                  '${CurrencyHelper.formatAmount(budget.limit, currency)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: progressColor,
                         fontWeight: FontWeight.w600,
@@ -65,7 +68,7 @@ class BudgetProgressCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: Sizes.p4),
                 child: Text(
                   'Over budget by '
-                  '\$${(spent - budget.limit).toStringAsFixed(2)}',
+                  '${CurrencyHelper.formatAmount(spent - budget.limit, currency)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.budgetExceeded,
                       ),

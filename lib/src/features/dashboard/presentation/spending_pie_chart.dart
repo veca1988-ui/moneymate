@@ -2,10 +2,16 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/utils/currency_helper.dart';
 
 class SpendingPieChart extends StatelessWidget {
-  const SpendingPieChart({required this.categoryTotals, super.key});
+  const SpendingPieChart({
+    required this.categoryTotals,
+    required this.currency,
+    super.key,
+  });
   final Map<String, double> categoryTotals;
+  final String currency;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +74,7 @@ class SpendingPieChart extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '$category: \$${amount.toStringAsFixed(0)}',
+                      '$category: ${CurrencyHelper.formatAmount(amount, currency)}',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],

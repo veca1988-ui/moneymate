@@ -4,12 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/budgets/data/budgets_repository_impl.dart';
 import 'package:moneymate/src/features/budgets/domain/budget.dart';
 import 'package:moneymate/src/features/dashboard/presentation/budget_progress_card.dart';
 import 'package:moneymate/src/features/dashboard/presentation/spending_pie_chart.dart';
 import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
+import 'package:moneymate/src/utils/currency_helper.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({
@@ -24,6 +26,8 @@ class DashboardScreen extends ConsumerWidget {
     final now = DateTime.now();
     final month = DateFormat('yyyy-MM').format(now);
     final monthDisplay = DateFormat('MMMM yyyy').format(now);
+    final user = ref.watch(authStateChangesProvider).valueOrNull;
+    final currency = user?.currency ?? 'USD';
 
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +73,7 @@ class DashboardScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: Sizes.p8),
                         Text(
-                          '\$${totalSpent.toStringAsFixed(2)}',
+                          CurrencyHelper.formatAmount(totalSpent, currency),
                           style: Theme.of(context)
                               .textTheme
                               .headlineLarge
@@ -84,7 +88,10 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: Sizes.p16),
                 if (categoryTotals.isNotEmpty)
-                  SpendingPieChart(categoryTotals: categoryTotals),
+                  SpendingPieChart(
+                    categoryTotals: categoryTotals,
+                    currency: currency,
+                  ),
                 const SizedBox(height: Sizes.p24),
                 Text(
                   'Budgets',
@@ -115,6 +122,7 @@ class DashboardScreen extends ConsumerWidget {
                         return BudgetProgressCard(
                           budget: budget,
                           spent: spent,
+                          currency: currency,
                         );
                       }).toList(),
                     );
