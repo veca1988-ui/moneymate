@@ -22,6 +22,13 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
   String? _selectedCategory;
   bool _isPrivate = false;
   DateTime _selectedDate = DateTime.now();
+  final _noteController = TextEditingController();
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
 
   Future<void> _pickDate() async {
     final now = DateTime.now();
@@ -65,6 +72,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
               category: _selectedCategory!,
               visibility: _isPrivate ? 'private' : 'shared',
               date: _selectedDate,
+              note: _noteController.text.trim(),
             );
 
     if (mounted) {
@@ -144,6 +152,20 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                   ],
                 ),
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Sizes.p16,
+              vertical: Sizes.p8,
+            ),
+            child: TextField(
+              controller: _noteController,
+              decoration: const InputDecoration(
+                labelText: 'Note (optional)',
+                prefixIcon: Icon(Icons.note_outlined),
+              ),
+              textCapitalization: TextCapitalization.sentences,
             ),
           ),
           Padding(
