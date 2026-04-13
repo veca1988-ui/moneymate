@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/expenses/presentation/category_grid.dart';
 import 'package:moneymate/src/features/expenses/presentation/expenses_controller.dart';
+import 'package:moneymate/src/utils/currency_helper.dart';
 
 class AddExpenseScreen extends ConsumerStatefulWidget {
   const AddExpenseScreen({required this.coupleId, super.key});
@@ -64,6 +66,8 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(expensesControllerProvider);
+    final user = ref.watch(authStateChangesProvider).valueOrNull;
+    final currency = user?.currency ?? 'USD';
 
     return Scaffold(
       appBar: AppBar(
@@ -84,7 +88,9 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: Sizes.p32),
             child: Text(
-              _amount.isEmpty ? '0' : _amount,
+              _amount.isEmpty
+                  ? '${CurrencyHelper.symbol(currency)}0'
+                  : '${CurrencyHelper.symbol(currency)}$_amount',
               style: Theme.of(context).textTheme.displayLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,

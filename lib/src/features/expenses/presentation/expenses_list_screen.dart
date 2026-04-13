@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
+import 'package:moneymate/src/utils/currency_helper.dart';
 
 class ExpensesListScreen extends ConsumerWidget {
   const ExpensesListScreen({
@@ -18,6 +20,9 @@ class ExpensesListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authStateChangesProvider).valueOrNull;
+    final currency = user?.currency ?? 'USD';
+
     return Scaffold(
       appBar: AppBar(title: const Text('Expenses')),
       body: StreamBuilder<List<Expense>>(
@@ -80,7 +85,7 @@ class ExpensesListScreen extends ConsumerWidget {
                                   ),
                         ),
                         Text(
-                          '\$${dayTotal.toStringAsFixed(2)}',
+                          CurrencyHelper.formatAmount(dayTotal, currency),
                           style:
                               Theme.of(context).textTheme.titleSmall?.copyWith(
                                     color: AppColors.expense,
@@ -91,7 +96,10 @@ class ExpensesListScreen extends ConsumerWidget {
                     ),
                   ),
                   ...dayExpenses.map(
-                    (expense) => _ExpenseListTile(expense: expense),
+                    (expense) => _ExpenseListTile(
+                      expense: expense,
+                      currency: currency,
+                    ),
                   ),
                   const Divider(),
                 ],
@@ -105,8 +113,9 @@ class ExpensesListScreen extends ConsumerWidget {
 }
 
 class _ExpenseListTile extends StatelessWidget {
-  const _ExpenseListTile({required this.expense});
+  const _ExpenseListTile({required this.expense, required this.currency});
   final Expense expense;
+  final String currency;
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +140,7 @@ class _ExpenseListTile extends StatelessWidget {
               child: Icon(Icons.lock, size: 16, color: AppColors.warning),
             ),
           Text(
-            '\$${expense.amount.toStringAsFixed(2)}',
+            CurrencyHelper.formatAmount(expense.amount, currency),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
