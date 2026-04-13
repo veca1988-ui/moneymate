@@ -28,6 +28,7 @@ mixin _$Expense {
   String get visibility => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   String get note => throw _privateConstructorUsedError;
+  String get userName => throw _privateConstructorUsedError;
 
   /// Serializes this Expense to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,7 +52,8 @@ abstract class $ExpenseCopyWith<$Res> {
       String userId,
       String visibility,
       DateTime createdAt,
-      String note});
+      String note,
+      String userName});
 }
 
 /// @nodoc
@@ -77,6 +79,7 @@ class _$ExpenseCopyWithImpl<$Res, $Val extends Expense>
     Object? visibility = null,
     Object? createdAt = null,
     Object? note = null,
+    Object? userName = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -111,6 +114,10 @@ class _$ExpenseCopyWithImpl<$Res, $Val extends Expense>
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
               as String,
+      userName: null == userName
+          ? _value.userName
+          : userName // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -130,7 +137,8 @@ abstract class _$$ExpenseImplCopyWith<$Res> implements $ExpenseCopyWith<$Res> {
       String userId,
       String visibility,
       DateTime createdAt,
-      String note});
+      String note,
+      String userName});
 }
 
 /// @nodoc
@@ -154,6 +162,7 @@ class __$$ExpenseImplCopyWithImpl<$Res>
     Object? visibility = null,
     Object? createdAt = null,
     Object? note = null,
+    Object? userName = null,
   }) {
     return _then(_$ExpenseImpl(
       id: null == id
@@ -188,6 +197,10 @@ class __$$ExpenseImplCopyWithImpl<$Res>
           ? _value.note
           : note // ignore: cast_nullable_to_non_nullable
               as String,
+      userName: null == userName
+          ? _value.userName
+          : userName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -203,7 +216,8 @@ class _$ExpenseImpl implements _Expense {
       required this.userId,
       required this.visibility,
       required this.createdAt,
-      this.note = ''});
+      this.note = '',
+      this.userName = ''});
 
   factory _$ExpenseImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExpenseImplFromJson(json);
@@ -225,10 +239,13 @@ class _$ExpenseImpl implements _Expense {
   @override
   @JsonKey()
   final String note;
+  @override
+  @JsonKey()
+  final String userName;
 
   @override
   String toString() {
-    return 'Expense(id: $id, amount: $amount, category: $category, date: $date, userId: $userId, visibility: $visibility, createdAt: $createdAt, note: $note)';
+    return 'Expense(id: $id, amount: $amount, category: $category, date: $date, userId: $userId, visibility: $visibility, createdAt: $createdAt, note: $note, userName: $userName)';
   }
 
   @override
@@ -246,13 +263,15 @@ class _$ExpenseImpl implements _Expense {
                 other.visibility == visibility) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
-            (identical(other.note, note) || other.note == note));
+            (identical(other.note, note) || other.note == note) &&
+            (identical(other.userName, userName) ||
+                other.userName == userName));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, amount, category, date,
-      userId, visibility, createdAt, note);
+      userId, visibility, createdAt, note, userName);
 
   /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.
@@ -279,7 +298,8 @@ abstract class _Expense implements Expense {
       required final String userId,
       required final String visibility,
       required final DateTime createdAt,
-      final String note}) = _$ExpenseImpl;
+      final String note,
+      final String userName}) = _$ExpenseImpl;
 
   factory _Expense.fromJson(Map<String, dynamic> json) = _$ExpenseImpl.fromJson;
 
@@ -299,6 +319,8 @@ abstract class _Expense implements Expense {
   DateTime get createdAt;
   @override
   String get note;
+  @override
+  String get userName;
 
   /// Create a copy of Expense
   /// with the given fields replaced by the non-null parameter values.

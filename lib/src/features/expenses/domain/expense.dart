@@ -15,6 +15,7 @@ class Expense with _$Expense {
     required String visibility,
     required DateTime createdAt,
     @Default('') String note,
+    @Default('') String userName,
   }) = _Expense;
 
   factory Expense.fromJson(Map<String, dynamic> json) =>

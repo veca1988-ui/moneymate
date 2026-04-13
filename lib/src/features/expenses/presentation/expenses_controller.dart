@@ -19,6 +19,8 @@ class ExpensesController extends _$ExpensesController {
     DateTime? date,
   }) async {
     final userId = ref.read(firebaseAuthRepositoryProvider).currentUserId!;
+    final user = ref.read(authStateChangesProvider).valueOrNull;
+    final userName = user?.name ?? '';
     final now = DateTime.now();
 
     final expense = Expense(
@@ -30,6 +32,7 @@ class ExpensesController extends _$ExpensesController {
       visibility: visibility,
       createdAt: now,
       note: note,
+      userName: userName,
     );
 
     state = const AsyncLoading();

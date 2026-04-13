@@ -16,6 +16,7 @@ _$ExpenseImpl _$$ExpenseImplFromJson(Map<String, dynamic> json) =>
       visibility: json['visibility'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       note: json['note'] as String? ?? '',
+      userName: json['userName'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$ExpenseImplToJson(_$ExpenseImpl instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$$ExpenseImplToJson(_$ExpenseImpl instance) =>
       'visibility': instance.visibility,
       'createdAt': instance.createdAt.toIso8601String(),
       'note': instance.note,
+      'userName': instance.userName,
     };
