@@ -8,9 +8,9 @@ import 'package:moneymate/src/features/expenses/domain/expense.dart';
 
 class ExpensesListScreen extends ConsumerWidget {
   const ExpensesListScreen({
-    super.key,
     required this.coupleId,
     required this.month,
+    super.key,
   });
 
   final String coupleId;
@@ -18,85 +18,88 @@ class ExpensesListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return StreamBuilder<List<Expense>>(
-      stream: ref
-          .read(expensesRepositoryProvider)
-          .watchExpenses(coupleId: coupleId, month: month),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return Scaffold(
+      appBar: AppBar(title: const Text('Expenses')),
+      body: StreamBuilder<List<Expense>>(
+        stream: ref
+            .read(expensesRepositoryProvider)
+            .watchExpenses(coupleId: coupleId, month: month),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        final expenses = snapshot.data ?? [];
+          final expenses = snapshot.data ?? [];
 
-        if (expenses.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.receipt_long,
-                  size: 64,
-                  color: AppColors.textSecondary,
-                ),
-                SizedBox(height: Sizes.p16),
-                Text('No expenses yet'),
-              ],
-            ),
-          );
-        }
-
-        final grouped = <String, List<Expense>>{};
-        for (final expense in expenses) {
-          final dateKey = DateFormat('yyyy-MM-dd').format(expense.date);
-          grouped.putIfAbsent(dateKey, () => []).add(expense);
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(Sizes.p16),
-          itemCount: grouped.length,
-          itemBuilder: (context, index) {
-            final dateKey = grouped.keys.elementAt(index);
-            final dayExpenses = grouped[dateKey]!;
-            final dayTotal =
-                dayExpenses.fold<double>(0, (sum, e) => sum + e.amount);
-            final date = DateTime.parse(dateKey);
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Sizes.p8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        DateFormat('EEEE, MMM d').format(date),
-                        style:
-                            Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  color: AppColors.textSecondary,
-                                ),
-                      ),
-                      Text(
-                        '\$${dayTotal.toStringAsFixed(2)}',
-                        style:
-                            Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  color: AppColors.expense,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                    ],
+          if (expenses.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.receipt_long,
+                    size: 64,
+                    color: AppColors.textSecondary,
                   ),
-                ),
-                ...dayExpenses.map(
-                  (expense) => _ExpenseListTile(expense: expense),
-                ),
-                const Divider(),
-              ],
+                  SizedBox(height: Sizes.p16),
+                  Text('No expenses yet'),
+                ],
+              ),
             );
-          },
-        );
-      },
+          }
+
+          final grouped = <String, List<Expense>>{};
+          for (final expense in expenses) {
+            final dateKey = DateFormat('yyyy-MM-dd').format(expense.date);
+            grouped.putIfAbsent(dateKey, () => []).add(expense);
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(Sizes.p16),
+            itemCount: grouped.length,
+            itemBuilder: (context, index) {
+              final dateKey = grouped.keys.elementAt(index);
+              final dayExpenses = grouped[dateKey]!;
+              final dayTotal =
+                  dayExpenses.fold<double>(0, (sum, e) => sum + e.amount);
+              final date = DateTime.parse(dateKey);
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Sizes.p8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DateFormat('EEEE, MMM d').format(date),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                        ),
+                        Text(
+                          '\$${dayTotal.toStringAsFixed(2)}',
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: AppColors.expense,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ...dayExpenses.map(
+                    (expense) => _ExpenseListTile(expense: expense),
+                  ),
+                  const Divider(),
+                ],
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

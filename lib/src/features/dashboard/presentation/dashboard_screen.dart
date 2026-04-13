@@ -13,8 +13,8 @@ import 'package:moneymate/src/features/expenses/domain/expense.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({
-    super.key,
     required this.coupleId,
+    super.key,
   });
 
   final String coupleId;
@@ -103,8 +103,7 @@ class DashboardScreen extends ConsumerWidget {
                         child: Padding(
                           padding: EdgeInsets.all(Sizes.p24),
                           child: Center(
-                            child:
-                                Text('No budgets set. Tap + to create one.'),
+                            child: Text('No budgets set. Tap + to create one.'),
                           ),
                         ),
                       );
@@ -112,8 +111,7 @@ class DashboardScreen extends ConsumerWidget {
 
                     return Column(
                       children: budgets.map((budget) {
-                        final spent =
-                            categoryTotals[budget.category] ?? 0;
+                        final spent = categoryTotals[budget.category] ?? 0;
                         return BudgetProgressCard(
                           budget: budget,
                           spent: spent,
@@ -132,7 +130,6 @@ class DashboardScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: 0,
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           NavigationDestination(icon: Icon(Icons.list), label: 'Expenses'),
@@ -146,7 +143,17 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ],
         onDestinationSelected: (index) {
-          // Navigation handled by GoRouter
+          switch (index) {
+            case 0:
+              break; // Already on Home
+            case 1:
+              context.push('/expenses/$coupleId');
+            case 2:
+              // Reports — same as home for now
+              break;
+            case 3:
+              context.push('/settings');
+          }
         },
       ),
     );

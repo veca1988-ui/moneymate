@@ -20,6 +20,23 @@ class _InvitePartnerScreenState extends ConsumerState<InvitePartnerScreen> {
   CoupleInvite? _invite;
   bool _isLoading = false;
 
+  Future<void> _skipForNow() async {
+    setState(() => _isLoading = true);
+    try {
+      final userId = ref.read(firebaseAuthRepositoryProvider).currentUserId!;
+      await ref.read(couplesRepositoryProvider).createSoloCouple(userId);
+      // Auth state will refresh and router will redirect to dashboard
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _generateInvite() async {
     setState(() => _isLoading = true);
     try {
@@ -131,9 +148,7 @@ class _InvitePartnerScreenState extends ConsumerState<InvitePartnerScreen> {
             ],
             const SizedBox(height: Sizes.p24),
             TextButton(
-              onPressed: () {
-                // Skip for now — go to solo dashboard
-              },
+              onPressed: _isLoading ? null : _skipForNow,
               child: const Text('Skip for now'),
             ),
           ],

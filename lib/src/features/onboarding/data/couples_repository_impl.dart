@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/onboarding/domain/couple.dart';
 import 'package:moneymate/src/features/onboarding/domain/couple_invite.dart';
 import 'package:moneymate/src/features/onboarding/domain/couples_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'couples_repository_impl.g.dart';
 
@@ -168,6 +168,37 @@ class CouplesRepositoryImpl implements CouplesRepository {
         .collection('privacySettings')
         .doc(userId)
         .set(settings);
+  }
+
+  Future<Couple> createSoloCouple(String userId) async {
+    final now = DateTime.now();
+    final trialEnd = now.add(const Duration(days: 14));
+    final coupleRef = _firestore.collection('couples').doc();
+
+    await coupleRef.set({
+      'user1Id': userId,
+      'user2Id': null,
+      'createdAt': FieldValue.serverTimestamp(),
+      'subscriptionStatus': 'trial',
+      'trialStartDate': Timestamp.fromDate(now),
+      'trialEndDate': Timestamp.fromDate(trialEnd),
+      'subscriberUserId': null,
+      'expiresAt': null,
+    });
+
+    await _firestore.collection('users').doc(userId).update({
+      'coupleId': coupleRef.id,
+    });
+
+    return Couple(
+      id: coupleRef.id,
+      user1Id: userId,
+      user2Id: '',
+      createdAt: now,
+      subscriptionStatus: 'trial',
+      trialStartDate: now,
+      trialEndDate: trialEnd,
+    );
   }
 
   String _generateInviteCode() {

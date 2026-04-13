@@ -7,7 +7,7 @@ import 'package:moneymate/src/features/expenses/presentation/category_grid.dart'
 import 'package:moneymate/src/features/expenses/presentation/expenses_controller.dart';
 
 class AddExpenseScreen extends ConsumerStatefulWidget {
-  const AddExpenseScreen({super.key, required this.coupleId});
+  const AddExpenseScreen({required this.coupleId, super.key});
   final String coupleId;
 
   @override
@@ -26,8 +26,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
         _amount = '0.';
         return;
       }
-      if (_amount.contains('.') &&
-          _amount.split('.').last.length >= 2) return;
+      if (_amount.contains('.') && _amount.split('.').last.length >= 2) return;
       _amount += digit;
     });
   }
@@ -50,7 +49,16 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
               visibility: _isPrivate ? 'private' : 'shared',
             );
 
-    if (success && mounted) context.pop();
+    if (mounted) {
+      if (success) {
+        context.pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Failed to save expense. Please try again.')),
+        );
+      }
+    }
   }
 
   @override

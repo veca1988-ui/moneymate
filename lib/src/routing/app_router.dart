@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/auth/presentation/login_screen.dart';
 import 'package:moneymate/src/features/auth/presentation/register_screen.dart';
@@ -11,6 +10,7 @@ import 'package:moneymate/src/features/onboarding/presentation/invite_partner_sc
 import 'package:moneymate/src/features/settings/presentation/privacy_settings_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/settings_screen.dart';
 import 'package:moneymate/src/features/subscription/presentation/paywall_screen.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
 
@@ -42,7 +42,10 @@ GoRouter goRouter(GoRouterRef ref) {
       GoRoute(
         path: '/home',
         builder: (context, state) {
-          final coupleId = user?.coupleId ?? '';
+          final coupleId = user?.coupleId;
+          if (coupleId == null || coupleId.isEmpty) {
+            return const InvitePartnerScreen();
+          }
           return DashboardScreen(coupleId: coupleId);
         },
       ),
@@ -56,8 +59,7 @@ GoRouter goRouter(GoRouterRef ref) {
         path: '/expenses/:coupleId',
         builder: (context, state) {
           final coupleId = state.pathParameters['coupleId']!;
-          final month = state.uri.queryParameters['month'] ??
-              _currentMonth();
+          final month = state.uri.queryParameters['month'] ?? _currentMonth();
           return ExpensesListScreen(coupleId: coupleId, month: month);
         },
       ),
@@ -78,7 +80,10 @@ GoRouter goRouter(GoRouterRef ref) {
       GoRoute(
         path: '/settings/privacy',
         builder: (context, state) {
-          final coupleId = user?.coupleId ?? '';
+          final coupleId = user?.coupleId;
+          if (coupleId == null || coupleId.isEmpty) {
+            return const InvitePartnerScreen();
+          }
           return PrivacySettingsScreen(coupleId: coupleId);
         },
       ),
