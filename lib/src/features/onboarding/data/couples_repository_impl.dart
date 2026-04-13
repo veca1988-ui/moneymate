@@ -186,9 +186,9 @@ class CouplesRepositoryImpl implements CouplesRepository {
       'expiresAt': null,
     });
 
-    await _firestore.collection('users').doc(userId).update({
+    await _firestore.collection('users').doc(userId).set({
       'coupleId': coupleRef.id,
-    });
+    }, SetOptions(merge: true));
 
     return Couple(
       id: coupleRef.id,

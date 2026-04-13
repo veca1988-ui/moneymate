@@ -20,7 +20,7 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.person_outlined),
             title: const Text('Profile'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
+            onTap: () => context.push('/settings/profile'),
           ),
           ListTile(
             leading: const Icon(Icons.lock_outlined),

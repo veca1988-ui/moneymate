@@ -42,7 +42,17 @@ class FirebaseAuthRepository {
   Stream<AppUser?> authStateChanges() {
     return _auth.authStateChanges().asyncMap((firebaseUser) async {
       if (firebaseUser == null) return null;
-      return _userRepo.getUser(firebaseUser.uid);
+      final user = await _userRepo.getUser(firebaseUser.uid);
+      if (user != null) return user;
+      // User document may not exist yet (just signed up) — return a minimal user
+      // so the router knows the user is authenticated
+      return AppUser(
+        id: firebaseUser.uid,
+        email: firebaseUser.email ?? '',
+        name: firebaseUser.displayName ?? '',
+        currency: 'USD',
+        createdAt: DateTime.now(),
+      );
     });
   }
 

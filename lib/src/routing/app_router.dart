@@ -8,7 +8,9 @@ import 'package:moneymate/src/features/expenses/presentation/expenses_list_scree
 import 'package:moneymate/src/features/onboarding/presentation/accept_invite_screen.dart';
 import 'package:moneymate/src/features/onboarding/presentation/invite_partner_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/privacy_settings_screen.dart';
+import 'package:moneymate/src/features/settings/presentation/profile_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/settings_screen.dart';
+import 'package:moneymate/src/features/budgets/presentation/add_budget_screen.dart';
 import 'package:moneymate/src/features/subscription/presentation/paywall_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -64,6 +66,12 @@ GoRouter goRouter(GoRouterRef ref) {
         },
       ),
       GoRoute(
+        path: '/add-budget/:coupleId',
+        builder: (context, state) => AddBudgetScreen(
+          coupleId: state.pathParameters['coupleId']!,
+        ),
+      ),
+      GoRoute(
         path: '/invite',
         builder: (context, state) => const InvitePartnerScreen(),
       ),
@@ -76,6 +84,10 @@ GoRouter goRouter(GoRouterRef ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/profile',
+        builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
         path: '/settings/privacy',

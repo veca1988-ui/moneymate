@@ -25,7 +25,8 @@ class _InvitePartnerScreenState extends ConsumerState<InvitePartnerScreen> {
     try {
       final userId = ref.read(firebaseAuthRepositoryProvider).currentUserId!;
       await ref.read(couplesRepositoryProvider).createSoloCouple(userId);
-      // Auth state will refresh and router will redirect to dashboard
+      // Force router to re-evaluate by invalidating auth state
+      ref.invalidate(authStateChangesProvider);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

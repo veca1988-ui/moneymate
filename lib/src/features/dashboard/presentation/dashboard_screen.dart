@@ -126,7 +126,34 @@ class DashboardScreen extends ConsumerWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/add-expense/$coupleId'),
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (ctx) => SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.receipt_long),
+                    title: const Text('Add Expense'),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      context.push('/add-expense/$coupleId');
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.savings),
+                    title: const Text('Add Budget'),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      context.push('/add-budget/$coupleId');
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: NavigationBar(
