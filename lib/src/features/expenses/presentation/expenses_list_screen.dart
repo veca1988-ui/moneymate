@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
+import 'package:moneymate/src/features/expenses/presentation/expenses_controller.dart';
 import 'package:moneymate/src/utils/currency_helper.dart';
 
 class ExpensesListScreen extends ConsumerWidget {
@@ -96,9 +98,57 @@ class ExpensesListScreen extends ConsumerWidget {
                     ),
                   ),
                   ...dayExpenses.map(
-                    (expense) => _ExpenseListTile(
-                      expense: expense,
-                      currency: currency,
+                    (expense) => Dismissible(
+                      key: ValueKey(expense.id),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: Sizes.p16),
+                        color: Colors.red,
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ),
+                      confirmDismiss: (direction) async {
+                        return showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text('Delete Expense'),
+                            content: const Text(
+                              'Are you sure you want to delete this expense?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(ctx).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.of(ctx).pop(true),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      onDismissed: (direction) {
+                        ref
+                            .read(expensesControllerProvider.notifier)
+                            .deleteExpense(
+                              coupleId: coupleId,
+                              expenseId: expense.id,
+                            );
+                      },
+                      child: GestureDetector(
+                        onTap: () => context.push(
+                          '/edit-expense/$coupleId',
+                          extra: expense,
+                        ),
+                        child: _ExpenseListTile(
+                          expense: expense,
+                          currency: currency,
+                        ),
+                      ),
                     ),
                   ),
                   const Divider(),
@@ -130,7 +180,7 @@ class _ExpenseListTile extends StatelessWidget {
         ),
       ),
       title: Text(expense.category),
-      subtitle: expense.note.isNotEmpty ? Text(expense.note) : null,
+      subtitle: _buildSubtitle(context),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -150,16 +200,43 @@ class _ExpenseListTile extends StatelessWidget {
     );
   }
 
+  Widget? _buildSubtitle(BuildContext context) {
+    final hasName = expense.userName.isNotEmpty;
+    final hasNote = expense.note.isNotEmpty;
+    if (!hasName && !hasNote) return null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (hasName)
+          Text(
+            expense.userName,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey,
+                ),
+          ),
+        if (hasNote)
+          Text(
+            expense.note,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
+          ),
+      ],
+    );
+  }
+
   IconData _categoryIcon(String category) {
     return switch (category) {
       'Groceries' => Icons.shopping_cart,
       'Dining' => Icons.restaurant,
       'Transport' => Icons.directions_car,
-      'Bills' => Icons.receipt_long,
+      'Bills' => Icons.receipt,
       'Entertainment' => Icons.movie,
       'Shopping' => Icons.shopping_bag,
-      'Health' => Icons.local_hospital,
-      _ => Icons.more_horiz,
+      'Health' => Icons.medical_services,
+      _ => Icons.category,
     };
   }
 }
