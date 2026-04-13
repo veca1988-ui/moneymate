@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
@@ -20,6 +21,20 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
   String _amount = '';
   String? _selectedCategory;
   bool _isPrivate = false;
+  DateTime _selectedDate = DateTime.now();
+
+  Future<void> _pickDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(now.year - 1, now.month, now.day),
+      lastDate: now,
+    );
+    if (picked != null) {
+      setState(() => _selectedDate = picked);
+    }
+  }
 
   void _onDigitPressed(String digit) {
     setState(() {
@@ -49,6 +64,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
               amount: double.parse(_amount),
               category: _selectedCategory!,
               visibility: _isPrivate ? 'private' : 'shared',
+              date: _selectedDate,
             );
 
     if (mounted) {
@@ -107,6 +123,29 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
             ),
           ),
           const Spacer(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
+            child: InkWell(
+              onTap: _pickDate,
+              borderRadius: BorderRadius.circular(Sizes.p12),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Sizes.p8,
+                  vertical: Sizes.p12,
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.calendar_today_outlined),
+                    const SizedBox(width: Sizes.p8),
+                    Text(
+                      DateFormat('EEE, MMM d, yyyy').format(_selectedDate),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(Sizes.p16),
             child: _buildNumberPad(),
