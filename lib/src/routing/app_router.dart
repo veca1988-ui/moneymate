@@ -12,6 +12,7 @@ import 'package:moneymate/src/features/settings/presentation/privacy_settings_sc
 import 'package:moneymate/src/features/settings/presentation/profile_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/settings_screen.dart';
 import 'package:moneymate/src/features/budgets/presentation/add_budget_screen.dart';
+import 'package:moneymate/src/features/reports/presentation/reports_screen.dart';
 import 'package:moneymate/src/features/subscription/presentation/paywall_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -76,6 +77,12 @@ GoRouter goRouter(GoRouterRef ref) {
       GoRoute(
         path: '/add-budget/:coupleId',
         builder: (context, state) => AddBudgetScreen(
+          coupleId: state.pathParameters['coupleId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/reports/:coupleId',
+        builder: (context, state) => ReportsScreen(
           coupleId: state.pathParameters['coupleId']!,
         ),
       ),

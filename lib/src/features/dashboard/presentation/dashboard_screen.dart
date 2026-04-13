@@ -184,8 +184,7 @@ class DashboardScreen extends ConsumerWidget {
             case 1:
               context.push('/expenses/$coupleId');
             case 2:
-              // Reports — same as home for now
-              break;
+              context.push('/reports/$coupleId');
             case 3:
               context.push('/settings');
           }
