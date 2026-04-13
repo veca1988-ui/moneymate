@@ -71,7 +71,8 @@ Complete all features needed for a fully functional freemium couples expense tra
   - Category breakdown: list of categories with amount and percentage bar
   - Month selector (left/right arrows to navigate between months)
 - Route: `/reports/:coupleId` — `coupleId` passed from DashboardScreen's bottom navigation (same pattern as Expenses tab)
-- Premium-gated in Faza 2 (free users see the screen but with a "Upgrade to Premium" overlay prompting upgrade)
+- Free users see current month only; premium users can navigate to any past month
+- In Faza 2, add "Upgrade" prompt when free users try to view past months
 
 ### 1.6 Unlink Partner
 
@@ -95,12 +96,12 @@ Complete all features needed for a fully functional freemium couples expense tra
 
 **Solution:**
 - Free tier limits:
-  - 30 expenses per month
-  - 5 free categories: Groceries, Dining, Transport, Bills, Other
-  - 3 premium-only categories: Entertainment, Shopping, Health
-  - No Reports tab access
+  - 50 expenses per month (enough for a couple's typical usage)
+  - All 8 categories available to everyone
+  - Basic Reports (category breakdown for current month only)
+  - Premium unlocks: unlimited expenses, full Reports history (all months), custom categories, CSV export, budget alerts
 - Track expense count per month in the existing expenses stream
-- When user tries to add expense #31 or select a premium category → show paywall
+- When user tries to add expense #51 → show paywall
 - `isPremium` check reads from local subscription state (RevenueCat when available, fallback to Firestore `subscriptionStatus`)
 
 ### 2.2 Paywall Trigger
@@ -109,9 +110,9 @@ Complete all features needed for a fully functional freemium couples expense tra
 
 **Solution:**
 - Show paywall when:
-  - User hits 30 expense limit for the month
-  - User taps a locked category (premium categories show a lock icon)
-  - User taps Reports tab (if not premium)
+  - User hits 50 expense limit for the month
+  - User tries to view Reports history (months other than current)
+  - User tries to export CSV
 - Paywall shows current pricing and feature comparison (free vs premium)
 - Until RevenueCat is connected, purchase buttons show "Coming soon — free during beta"
 
@@ -127,6 +128,16 @@ Complete all features needed for a fully functional freemium couples expense tra
 - Restore Purchases calls RevenueCat restore
 - 14-day free trial for new couples (trial starts when partner joins)
 
+### 2.4 Trial Banner and Expiry Nudge
+
+**Problem:** Users on trial have no visibility into when it ends.
+
+**Solution:**
+- Show a banner on dashboard: "Trial ends in X days — Upgrade to keep Premium"
+- Banner appears when trial has 7 or fewer days remaining
+- Push notification 3 days before trial expires (Cloud Function)
+- After trial expires, user is downgraded to free tier automatically
+
 ---
 
 ## Faza 3: Polish for Store
@@ -140,34 +151,28 @@ Complete all features needed for a fully functional freemium couples expense tra
 - PageView with dots indicator, "Skip" and "Get Started" buttons
 - Show only once (flag in SharedPreferences)
 
-### 3.2 Notifications
+### 3.2 Partner B Tutorial
+
+- When Partner B accepts an invite and lands on dashboard for the first time, show a brief overlay tutorial (3 steps):
+  1. "Your partner invited you!" — welcome message
+  2. "Tap + to add expenses" — points to FAB
+  3. "Control what's shared" — points to Settings > Privacy
+- Show only once per user (flag in Firestore user document)
+
+### 3.3 Notifications
 
 - Save FCM token to user's Firestore document on every login and token refresh
 - Foreground notifications via `flutter_local_notifications`
 - Budget alert Cloud Function: trigger at 80% and 100% of budget limit
 - Partner activity notification (existing Cloud Function, just needs working FCM token)
 
-### 3.3 Dark Mode
-
-- Toggle switch in Settings screen
-- Persist preference in SharedPreferences
-- Create `AppTheme.dark` matching the existing design system colors
-- App reads theme preference at startup
-
-### 3.4 CSV Export (Premium)
-
-- Button in Reports screen: "Export as CSV"
-- Generates CSV with columns: Date, Category, Amount, Note, Added By, Visibility
-- Uses share sheet to save/send the file
-- Premium-only feature
-
-### 3.5 Tests
+### 3.4 Tests
 
 - Unit tests: currency helper, expense model, budget calculations
 - Widget tests: login screen, add expense screen, dashboard
 - Integration tests: auth flow (register → skip → dashboard → add expense)
 
-### 3.6 App Store / Play Store Preparation
+### 3.5 App Store / Play Store Preparation
 
 - Final app icon (already prepared in earlier commit)
 - Screenshots for all required device sizes
@@ -184,10 +189,11 @@ Complete all features needed for a fully functional freemium couples expense tra
 Not in scope for V1.0, planned as updates after launch:
 
 - Google Sign-In / Apple Sign-In
+- Dark mode
+- CSV export (premium feature)
 - Recurring expenses
 - Savings goals
 - Weekly digest email/notification
-- Dark mode refinements
 - Plaid bank sync (V2)
 - Receipt scanning (V2)
 - Multi-currency per couple (V2)
