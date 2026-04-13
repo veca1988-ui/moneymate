@@ -1,0 +1,30 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:moneymate/src/utils/currency_helper.dart';
+
+void main() {
+  group('CurrencyHelper', () {
+    test('formatAmount returns correct symbol for USD', () {
+      expect(CurrencyHelper.formatAmount(42.5, 'USD'), '\$42.50');
+    });
+    test('formatAmount returns correct symbol for EUR', () {
+      expect(CurrencyHelper.formatAmount(42.5, 'EUR'), '€42.50');
+    });
+    test('formatAmount returns correct symbol for GBP', () {
+      expect(CurrencyHelper.formatAmount(42.5, 'GBP'), '£42.50');
+    });
+    test('formatAmount returns correct symbol for RSD', () {
+      expect(CurrencyHelper.formatAmount(42.5, 'RSD'), '43 RSD');
+    });
+    test('formatAmount returns correct symbol for CAD', () {
+      expect(CurrencyHelper.formatAmount(42.5, 'CAD'), 'C\$42.50');
+    });
+    test('formatAmount returns correct symbol for AUD', () {
+      expect(CurrencyHelper.formatAmount(42.5, 'AUD'), 'A\$42.50');
+    });
+    test('symbol returns just the symbol', () {
+      expect(CurrencyHelper.symbol('USD'), '\$');
+      expect(CurrencyHelper.symbol('EUR'), '€');
+      expect(CurrencyHelper.symbol('RSD'), 'RSD');
+    });
+  });
+}
