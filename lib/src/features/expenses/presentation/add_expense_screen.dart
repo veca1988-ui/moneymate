@@ -5,13 +5,15 @@ import 'package:intl/intl.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
+import 'package:moneymate/src/features/expenses/domain/expense.dart';
 import 'package:moneymate/src/features/expenses/presentation/category_grid.dart';
 import 'package:moneymate/src/features/expenses/presentation/expenses_controller.dart';
 import 'package:moneymate/src/utils/currency_helper.dart';
 
 class AddExpenseScreen extends ConsumerStatefulWidget {
-  const AddExpenseScreen({required this.coupleId, super.key});
+  const AddExpenseScreen({required this.coupleId, this.expense, super.key});
   final String coupleId;
+  final Expense? expense;
 
   @override
   ConsumerState<AddExpenseScreen> createState() => _AddExpenseScreenState();
@@ -23,6 +25,19 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
   bool _isPrivate = false;
   DateTime _selectedDate = DateTime.now();
   final _noteController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final e = widget.expense;
+    if (e != null) {
+      _amount = e.amount.toString();
+      _selectedCategory = e.category;
+      _isPrivate = e.visibility == 'private';
+      _selectedDate = e.date;
+      _noteController.text = e.note;
+    }
+  }
 
   @override
   void dispose() {
@@ -65,15 +80,31 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
     if (_amount.isEmpty || double.tryParse(_amount) == null) return;
     if (_selectedCategory == null) return;
 
-    final success =
-        await ref.read(expensesControllerProvider.notifier).addExpense(
-              coupleId: widget.coupleId,
-              amount: double.parse(_amount),
-              category: _selectedCategory!,
-              visibility: _isPrivate ? 'private' : 'shared',
-              date: _selectedDate,
-              note: _noteController.text.trim(),
-            );
+    final controller = ref.read(expensesControllerProvider.notifier);
+    final bool success;
+
+    if (widget.expense != null) {
+      final updated = widget.expense!.copyWith(
+        amount: double.parse(_amount),
+        category: _selectedCategory!,
+        visibility: _isPrivate ? 'private' : 'shared',
+        date: _selectedDate,
+        note: _noteController.text.trim(),
+      );
+      success = await controller.updateExpense(
+        coupleId: widget.coupleId,
+        expense: updated,
+      );
+    } else {
+      success = await controller.addExpense(
+        coupleId: widget.coupleId,
+        amount: double.parse(_amount),
+        category: _selectedCategory!,
+        visibility: _isPrivate ? 'private' : 'shared',
+        date: _selectedDate,
+        note: _noteController.text.trim(),
+      );
+    }
 
     if (mounted) {
       if (success) {
@@ -95,7 +126,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Expense'),
+        title: Text(widget.expense != null ? 'Edit Expense' : 'Add Expense'),
         actions: [
           IconButton(
             onPressed: () => setState(() => _isPrivate = !_isPrivate),

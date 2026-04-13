@@ -3,6 +3,7 @@ import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/auth/presentation/login_screen.dart';
 import 'package:moneymate/src/features/auth/presentation/register_screen.dart';
 import 'package:moneymate/src/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:moneymate/src/features/expenses/domain/expense.dart';
 import 'package:moneymate/src/features/expenses/presentation/add_expense_screen.dart';
 import 'package:moneymate/src/features/expenses/presentation/expenses_list_screen.dart';
 import 'package:moneymate/src/features/onboarding/presentation/accept_invite_screen.dart';
@@ -55,6 +56,13 @@ GoRouter goRouter(GoRouterRef ref) {
         path: '/add-expense/:coupleId',
         builder: (context, state) => AddExpenseScreen(
           coupleId: state.pathParameters['coupleId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/edit-expense/:coupleId',
+        builder: (context, state) => AddExpenseScreen(
+          coupleId: state.pathParameters['coupleId']!,
+          expense: state.extra as Expense?,
         ),
       ),
       GoRoute(

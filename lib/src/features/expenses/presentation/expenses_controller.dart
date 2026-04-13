@@ -45,4 +45,28 @@ class ExpensesController extends _$ExpensesController {
 
     return !state.hasError;
   }
+
+  Future<bool> updateExpense({
+    required String coupleId,
+    required Expense expense,
+  }) async {
+    final repo = ref.read(expensesRepositoryProvider);
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => repo.updateExpense(coupleId: coupleId, expense: expense),
+    );
+    return !state.hasError;
+  }
+
+  Future<bool> deleteExpense({
+    required String coupleId,
+    required String expenseId,
+  }) async {
+    final repo = ref.read(expensesRepositoryProvider);
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => repo.deleteExpense(coupleId: coupleId, expenseId: expenseId),
+    );
+    return !state.hasError;
+  }
 }
