@@ -11,6 +11,8 @@ import 'package:moneymate/src/features/dashboard/presentation/budget_progress_ca
 import 'package:moneymate/src/features/dashboard/presentation/spending_pie_chart.dart';
 import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
+import 'package:moneymate/src/features/onboarding/data/couples_repository_impl.dart';
+import 'package:moneymate/src/features/onboarding/domain/couple.dart';
 import 'package:moneymate/src/features/subscription/data/subscription_repository.dart';
 import 'package:moneymate/src/utils/currency_helper.dart';
 
@@ -60,6 +62,53 @@ class DashboardScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                StreamBuilder<Couple?>(
+                  stream: ref.read(couplesRepositoryProvider).watchCouple(coupleId),
+                  builder: (context, coupleSnapshot) {
+                    final couple = coupleSnapshot.data;
+                    if (couple == null || couple.subscriptionStatus != 'trial') {
+                      return const SizedBox.shrink();
+                    }
+
+                    final daysLeft = couple.trialEndDate.difference(DateTime.now()).inDays;
+                    if (daysLeft > 7) return const SizedBox.shrink();
+
+                    return Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(Sizes.p12),
+                      margin: const EdgeInsets.only(bottom: Sizes.p16),
+                      decoration: BoxDecoration(
+                        color: daysLeft <= 3 ? AppColors.expense.withOpacity(0.1) : AppColors.warning.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(Sizes.p12),
+                        border: Border.all(
+                          color: daysLeft <= 3 ? AppColors.expense : AppColors.warning,
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.timer_outlined,
+                            color: daysLeft <= 3 ? AppColors.expense : AppColors.warning,
+                          ),
+                          const SizedBox(width: Sizes.p8),
+                          Expanded(
+                            child: Text(
+                              daysLeft <= 0
+                                  ? 'Your trial has ended. Upgrade to keep Premium features.'
+                                  : 'Trial ends in $daysLeft day${daysLeft == 1 ? '' : 's'} — Upgrade to keep Premium',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => context.push('/subscription'),
+                            child: const Text('Upgrade'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(Sizes.p24),
