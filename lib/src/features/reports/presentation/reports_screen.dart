@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
+import 'package:moneymate/src/features/subscription/data/subscription_repository.dart';
 import 'package:moneymate/src/utils/currency_helper.dart';
 
 class ReportsScreen extends ConsumerStatefulWidget {
@@ -37,7 +39,30 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   String get _monthKey => DateFormat('yyyy-MM').format(_selectedMonth);
 
-  void _previousMonth() {
+  void _previousMonth() async {
+    final isPremium = await ref.read(isPremiumProvider.future);
+    if (!isPremium) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Premium Feature'),
+            content: const Text('View past months with MoneyMate Premium.'),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  context.push('/subscription');
+                },
+                child: const Text('Upgrade'),
+              ),
+            ],
+          ),
+        );
+      }
+      return;
+    }
     setState(() {
       _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month - 1);
     });
