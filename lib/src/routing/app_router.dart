@@ -8,6 +8,7 @@ import 'package:moneymate/src/features/expenses/presentation/add_expense_screen.
 import 'package:moneymate/src/features/expenses/presentation/expenses_list_screen.dart';
 import 'package:moneymate/src/features/onboarding/presentation/accept_invite_screen.dart';
 import 'package:moneymate/src/features/onboarding/presentation/invite_partner_screen.dart';
+import 'package:moneymate/src/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/privacy_settings_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/profile_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/settings_screen.dart';
@@ -24,17 +25,22 @@ GoRouter goRouter(GoRouterRef ref) {
   final user = authState.valueOrNull;
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/onboarding',
     redirect: (context, state) {
       final isLoggedIn = user != null;
       final isAuthRoute = state.matchedLocation == '/login' ||
-          state.matchedLocation == '/register';
+          state.matchedLocation == '/register' ||
+          state.matchedLocation == '/onboarding';
 
-      if (!isLoggedIn && !isAuthRoute) return '/login';
+      if (!isLoggedIn && !isAuthRoute) return '/onboarding';
       if (isLoggedIn && isAuthRoute) return '/home';
       return null;
     },
     routes: [
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
