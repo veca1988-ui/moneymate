@@ -26,5 +26,17 @@ void main() {
       expect(CurrencyHelper.symbol('EUR'), '€');
       expect(CurrencyHelper.symbol('RSD'), 'RSD');
     });
+    test('formatAmount with 0 returns zero formatted correctly', () {
+      expect(CurrencyHelper.formatAmount(0, 'USD'), '\$0.00');
+      expect(CurrencyHelper.formatAmount(0, 'EUR'), '€0.00');
+    });
+    test('formatAmount with very large number formats correctly', () {
+      expect(CurrencyHelper.formatAmount(1000000.0, 'USD'), '\$1000000.00');
+      expect(CurrencyHelper.formatAmount(9999999.99, 'GBP'), '£9999999.99');
+    });
+    test('symbol returns currency code itself for unknown currency code', () {
+      expect(CurrencyHelper.symbol('XYZ'), 'XYZ');
+      expect(CurrencyHelper.symbol('JPY'), 'JPY');
+    });
   });
 }
