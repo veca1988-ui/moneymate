@@ -138,90 +138,90 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: Sizes.p32),
-            child: Text(
-              _amount.isEmpty
-                  ? '${CurrencyHelper.symbol(currency)}0'
-                  : '${CurrencyHelper.symbol(currency)}$_amount',
-              style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
-            child: CategoryGrid(
-              selectedCategory: _selectedCategory,
-              onCategorySelected: (cat) =>
-                  setState(() => _selectedCategory = cat),
-            ),
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
-            child: InkWell(
-              onTap: _pickDate,
-              borderRadius: BorderRadius.circular(Sizes.p12),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Sizes.p8,
-                  vertical: Sizes.p12,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: Sizes.p32),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: Sizes.p24),
+                child: Text(
+                  _amount.isEmpty
+                      ? '${CurrencyHelper.symbol(currency)}0'
+                      : '${CurrencyHelper.symbol(currency)}$_amount',
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                  textAlign: TextAlign.center,
                 ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.calendar_today_outlined),
-                    const SizedBox(width: Sizes.p8),
-                    Text(
-                      DateFormat('EEE, MMM d, yyyy').format(_selectedDate),
-                      style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
+                child: CategoryGrid(
+                  selectedCategory: _selectedCategory,
+                  onCategorySelected: (cat) =>
+                      setState(() => _selectedCategory = cat),
+                ),
+              ),
+              const SizedBox(height: Sizes.p16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
+                child: InkWell(
+                  onTap: _pickDate,
+                  borderRadius: BorderRadius.circular(Sizes.p12),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Sizes.p8,
+                      vertical: Sizes.p12,
                     ),
-                  ],
+                    child: Row(
+                      children: [
+                        const Icon(Icons.calendar_today_outlined),
+                        const SizedBox(width: Sizes.p8),
+                        Text(
+                          DateFormat('EEE, MMM d, yyyy').format(_selectedDate),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Sizes.p16,
-              vertical: Sizes.p8,
-            ),
-            child: TextField(
-              controller: _noteController,
-              decoration: const InputDecoration(
-                labelText: 'Note (optional)',
-                prefixIcon: Icon(Icons.note_outlined),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Sizes.p16,
+                  vertical: Sizes.p8,
+                ),
+                child: TextField(
+                  controller: _noteController,
+                  decoration: const InputDecoration(
+                    labelText: 'Note (optional)',
+                    prefixIcon: Icon(Icons.note_outlined),
+                  ),
+                  textCapitalization: TextCapitalization.sentences,
+                ),
               ),
-              textCapitalization: TextCapitalization.sentences,
-            ),
+              Padding(
+                padding: const EdgeInsets.all(Sizes.p16),
+                child: _buildNumberPad(),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Sizes.p16),
+                child: ElevatedButton(
+                  onPressed: state.isLoading ||
+                          _amount.isEmpty ||
+                          _selectedCategory == null
+                      ? null
+                      : _onSave,
+                  child: state.isLoading
+                      ? const CircularProgressIndicator()
+                      : const Text('Save'),
+                ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(Sizes.p16),
-            child: _buildNumberPad(),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              Sizes.p16,
-              0,
-              Sizes.p16,
-              Sizes.p32,
-            ),
-            child: ElevatedButton(
-              onPressed: state.isLoading ||
-                      _amount.isEmpty ||
-                      _selectedCategory == null
-                  ? null
-                  : _onSave,
-              child: state.isLoading
-                  ? const CircularProgressIndicator()
-                  : const Text('Save'),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
