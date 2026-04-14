@@ -5,9 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
+import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
 import 'package:moneymate/src/features/expenses/presentation/category_grid.dart';
 import 'package:moneymate/src/features/expenses/presentation/expenses_controller.dart';
+import 'package:moneymate/src/features/subscription/data/subscription_repository.dart';
 import 'package:moneymate/src/utils/currency_helper.dart';
 
 class AddExpenseScreen extends ConsumerStatefulWidget {
@@ -79,6 +81,22 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
   Future<void> _onSave() async {
     if (_amount.isEmpty || double.tryParse(_amount) == null) return;
     if (_selectedCategory == null) return;
+
+    final isPremium = await ref.read(isPremiumProvider.future);
+    if (!isPremium) {
+      // Count expenses for current month
+      final month = DateFormat('yyyy-MM').format(DateTime.now());
+      final expenses = await ref
+          .read(expensesRepositoryProvider)
+          .watchExpenses(coupleId: widget.coupleId, month: month)
+          .first;
+      if (expenses.length >= 50) {
+        if (mounted) {
+          context.push('/subscription');
+        }
+        return;
+      }
+    }
 
     final controller = ref.read(expensesControllerProvider.notifier);
     final bool success;

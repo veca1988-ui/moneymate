@@ -11,6 +11,7 @@ import 'package:moneymate/src/features/dashboard/presentation/budget_progress_ca
 import 'package:moneymate/src/features/dashboard/presentation/spending_pie_chart.dart';
 import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
+import 'package:moneymate/src/features/subscription/data/subscription_repository.dart';
 import 'package:moneymate/src/utils/currency_helper.dart';
 
 class DashboardScreen extends ConsumerWidget {
@@ -81,6 +82,18 @@ class DashboardScreen extends ConsumerWidget {
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.expense,
                               ),
+                        ),
+                        FutureBuilder<bool>(
+                          future: ref.read(isPremiumProvider.future),
+                          builder: (context, premiumSnapshot) {
+                            if (premiumSnapshot.data == true) return const SizedBox.shrink();
+                            return Text(
+                              '${expenses.length}/50 expenses this month',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: expenses.length >= 45 ? AppColors.expense : AppColors.textSecondary,
+                                  ),
+                            );
+                          },
                         ),
                       ],
                     ),
