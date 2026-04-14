@@ -11,7 +11,7 @@ class PaywallScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: const Text('MoneyMate Premium')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(Sizes.p24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -34,16 +34,59 @@ class PaywallScreen extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: Sizes.p32),
-            const _FeatureRow(text: 'Spending charts & analytics'),
-            const _FeatureRow(text: 'Unlimited budget categories'),
-            const _FeatureRow(text: 'Export expense reports'),
+            const _FeatureRow(text: 'Unlimited expenses (free: 50/month)'),
+            const _FeatureRow(text: 'Full Reports history (free: current month only)'),
+            const _FeatureRow(text: 'CSV export (coming soon)'),
+            const _FeatureRow(text: 'Budget alerts (coming soon)'),
             const _FeatureRow(text: 'Priority support'),
-            const Spacer(),
+            const SizedBox(height: Sizes.p24),
+            // Free vs Premium comparison
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(Sizes.p16),
+                child: Column(
+                  children: [
+                    // Column headers
+                    Row(
+                      children: [
+                        const Expanded(flex: 2, child: SizedBox()),
+                        Expanded(
+                          child: Text(
+                            'Free',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Premium',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: Sizes.p8),
+                    _ComparisonRow(feature: 'Expenses', free: '50/month', premium: 'Unlimited'),
+                    _ComparisonRow(feature: 'Reports', free: 'Current month', premium: 'All history'),
+                    _ComparisonRow(feature: 'Categories', free: 'All 8', premium: 'All + Custom'),
+                    _ComparisonRow(feature: 'CSV Export', free: '—', premium: '✓'),
+                    _ComparisonRow(feature: 'Budget Alerts', free: '—', premium: '✓'),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: Sizes.p24),
             ElevatedButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Subscriptions available after setup'),
+                    content: Text('Coming soon — enjoy all features free during beta!'),
                   ),
                 );
               },
@@ -54,7 +97,7 @@ class PaywallScreen extends ConsumerWidget {
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Subscriptions available after setup'),
+                    content: Text('Coming soon — enjoy all features free during beta!'),
                   ),
                 );
               },
@@ -86,6 +129,39 @@ class _FeatureRow extends StatelessWidget {
           const Icon(Icons.check_circle, color: AppColors.income, size: 20),
           const SizedBox(width: Sizes.p12),
           Text(text, style: Theme.of(context).textTheme.bodyLarge),
+        ],
+      ),
+    );
+  }
+}
+
+class _ComparisonRow extends StatelessWidget {
+  const _ComparisonRow({required this.feature, required this.free, required this.premium});
+  final String feature;
+  final String free;
+  final String premium;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(flex: 2, child: Text(feature)),
+          Expanded(
+            child: Text(
+              free,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              premium,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
+            ),
+          ),
         ],
       ),
     );
