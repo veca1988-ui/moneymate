@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
 import 'package:moneymate/src/features/auth/presentation/auth_controller.dart';
 
@@ -60,6 +61,58 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Apple Sign-In coming soon!')),
+                    );
+                  },
+                  icon: const Icon(Icons.apple, color: Colors.white),
+                  label: const Text('Continue with Apple'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 48),
+                  ),
+                ),
+                const SizedBox(height: Sizes.p16),
+                OutlinedButton.icon(
+                  onPressed: state.isLoading
+                      ? null
+                      : () {
+                          ref
+                              .read(authControllerProvider.notifier)
+                              .signInWithGoogle();
+                        },
+                  icon: const Icon(Icons.g_mobiledata,
+                      size: 24, color: Color(0xFF4285F4)),
+                  label: const Text('Continue with Google'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.black87,
+                    minimumSize: const Size(double.infinity, 48),
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                ),
+                const SizedBox(height: Sizes.p16),
+                Row(
+                  children: [
+                    const Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Sizes.p16),
+                      child: Text(
+                        'or',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: AppColors.textSecondary),
+                      ),
+                    ),
+                    const Expanded(child: Divider()),
+                  ],
+                ),
+                const SizedBox(height: Sizes.p16),
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(

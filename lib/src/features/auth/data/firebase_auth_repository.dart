@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:moneymate/src/features/auth/data/user_repository.dart';
 import 'package:moneymate/src/features/auth/domain/app_user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -83,6 +84,35 @@ class FirebaseAuthRepository {
       password: password,
     );
     return _userRepo.getUser(credential.user!.uid);
+  }
+
+  Future<AppUser?> signInWithGoogle() async {
+    final googleSignIn = GoogleSignIn();
+    final googleUser = await googleSignIn.signIn();
+    if (googleUser == null) return null; // User cancelled
+
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final userCredential = await _auth.signInWithCredential(credential);
+    final firebaseUser = userCredential.user!;
+
+    // Check if user doc exists, create if first time
+    var user = await _userRepo.getUser(firebaseUser.uid);
+    if (user == null) {
+      user = AppUser(
+        id: firebaseUser.uid,
+        email: firebaseUser.email ?? '',
+        name: firebaseUser.displayName ?? '',
+        currency: 'USD',
+        createdAt: DateTime.now(),
+      );
+      await _userRepo.createUser(user);
+    }
+    return user;
   }
 
   Future<void> signOut() async {
