@@ -80,14 +80,22 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     }
   }
 
+  String _escapeCsv(String field) {
+    if (field.contains(',') || field.contains('"') || field.contains('\n')) {
+      return '"${field.replaceAll('"', '""')}"';
+    }
+    return field;
+  }
+
   Future<void> _exportCsv(List<Expense> expenses, String currency) async {
     final buffer = StringBuffer();
     buffer.writeln('Date,Category,Amount,Note,Added By,Visibility');
     for (final e in expenses) {
       final date = DateFormat('yyyy-MM-dd').format(e.date);
       final amount = e.amount.toStringAsFixed(2);
-      final note = e.note.replaceAll(',', ';'); // escape commas
-      buffer.writeln('$date,${e.category},$amount,$note,${e.userName},${e.visibility}');
+      buffer.writeln(
+        '${_escapeCsv(date)},${_escapeCsv(e.category)},${_escapeCsv(amount)},${_escapeCsv(e.note)},${_escapeCsv(e.userName)},${_escapeCsv(e.visibility)}',
+      );
     }
 
     await Share.share(
