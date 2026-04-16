@@ -88,8 +88,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ref.listen(authControllerProvider, (_, next) {
       if (next.hasError) {
+        final error = next.error.toString();
+        String message;
+        if (error.contains('invalid-credential') || error.contains('wrong-password')) {
+          message = 'Incorrect email or password. Please try again.';
+        } else if (error.contains('user-not-found')) {
+          message = 'No account found with this email.';
+        } else if (error.contains('too-many-requests')) {
+          message = 'Too many attempts. Please try again later.';
+        } else if (error.contains('network-request-failed')) {
+          message = 'No internet connection. Please check your network.';
+        } else {
+          message = 'Something went wrong. Please try again.';
+        }
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error.toString())),
+          SnackBar(content: Text(message)),
         );
       }
     });

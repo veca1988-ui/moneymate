@@ -120,17 +120,26 @@ class SettingsScreen extends ConsumerWidget {
             onPressed: () async {
               Navigator.pop(context);
               if (coupleId.isNotEmpty) {
-                final userId =
-                    ref.read(firebaseAuthRepositoryProvider).currentUserId!;
-                await ref
-                    .read(couplesRepositoryProvider)
-                    .unlinkPartner(coupleId, userId);
-                ref.invalidate(authStateChangesProvider);
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Partner unlinked successfully')),
-                  );
+                try {
+                  final userId =
+                      ref.read(firebaseAuthRepositoryProvider).currentUserId!;
+                  await ref
+                      .read(couplesRepositoryProvider)
+                      .unlinkPartner(coupleId, userId);
+                  ref.invalidate(authStateChangesProvider);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Partner unlinked successfully')),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Something went wrong. Please try again.')),
+                    );
+                  }
                 }
               }
             },
@@ -158,9 +167,18 @@ class SettingsScreen extends ConsumerWidget {
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
-              await ref
-                  .read(firebaseAuthRepositoryProvider)
-                  .deleteAccount();
+              try {
+                await ref
+                    .read(firebaseAuthRepositoryProvider)
+                    .deleteAccount();
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Something went wrong. Please try again.')),
+                  );
+                }
+              }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.expense),
             child: const Text('Delete'),

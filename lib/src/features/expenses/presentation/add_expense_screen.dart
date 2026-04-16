@@ -79,8 +79,18 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
   }
 
   Future<void> _onSave() async {
-    if (_amount.isEmpty || double.tryParse(_amount) == null) return;
-    if (_selectedCategory == null) return;
+    if (_amount.isEmpty || _amount == '0' || double.tryParse(_amount) == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter an amount')),
+      );
+      return;
+    }
+    if (_selectedCategory == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a category')),
+      );
+      return;
+    }
 
     final isPremium = await ref.read(isPremiumProvider.future);
     if (!isPremium) {

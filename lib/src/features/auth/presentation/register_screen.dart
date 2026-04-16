@@ -45,8 +45,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     ref.listen(authControllerProvider, (_, next) {
       if (next.hasError) {
+        final error = next.error.toString();
+        String message;
+        if (error.contains('email-already-in-use')) {
+          message = 'This email is already registered. Try signing in instead.';
+        } else if (error.contains('weak-password')) {
+          message = 'Password is too weak. Use at least 6 characters.';
+        } else if (error.contains('invalid-email')) {
+          message = 'Please enter a valid email address.';
+        } else if (error.contains('network-request-failed')) {
+          message = 'No internet connection. Please check your network.';
+        } else {
+          message = 'Something went wrong. Please try again.';
+        }
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error.toString())),
+          SnackBar(content: Text(message)),
         );
       }
     });
