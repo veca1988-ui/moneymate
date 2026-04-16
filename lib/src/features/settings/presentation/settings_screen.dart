@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/constants/theme_provider.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/auth/presentation/auth_controller.dart';
 import 'package:moneymate/src/features/onboarding/data/couples_repository_impl.dart';
@@ -31,6 +32,19 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('Privacy Controls'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push('/settings/privacy'),
+          ),
+          ListTile(
+            leading: Icon(
+              ref.watch(themeNotifierProvider) == ThemeMode.dark
+                  ? Icons.dark_mode
+                  : Icons.light_mode,
+            ),
+            title: const Text('Dark Mode'),
+            trailing: Switch(
+              value: ref.watch(themeNotifierProvider) == ThemeMode.dark,
+              onChanged: (_) =>
+                  ref.read(themeNotifierProvider.notifier).toggle(),
+            ),
           ),
           const Divider(),
           const _SectionHeader(title: 'Partner'),
