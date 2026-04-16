@@ -33,12 +33,31 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _showTutorial = false;
   int _selectedIndex = 0;
-  final Set<String> _notifiedBudgets = {};
+  Set<String> _notifiedBudgets = {};
 
   @override
   void initState() {
     super.initState();
     _checkTutorial();
+    _loadNotifiedBudgets();
+  }
+
+  Future<void> _loadNotifiedBudgets() async {
+    final prefs = await SharedPreferences.getInstance();
+    final month = DateFormat('yyyy-MM').format(DateTime.now());
+    final key = 'notified_budgets_$month';
+    final saved = prefs.getStringList(key);
+    if (saved != null) {
+      setState(() => _notifiedBudgets = saved.toSet());
+    }
+  }
+
+  Future<void> _markBudgetNotified(String category) async {
+    _notifiedBudgets.add(category);
+    final prefs = await SharedPreferences.getInstance();
+    final month = DateFormat('yyyy-MM').format(DateTime.now());
+    final key = 'notified_budgets_$month';
+    await prefs.setStringList(key, _notifiedBudgets.toList());
   }
 
   Future<void> _checkTutorial() async {
@@ -231,7 +250,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               categoryTotals[budget.category] ?? 0;
                           if (spent >= budget.limit &&
                               !_notifiedBudgets.contains(budget.category)) {
-                            _notifiedBudgets.add(budget.category);
+                            _markBudgetNotified(budget.category);
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
