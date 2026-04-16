@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:moneymate/src/features/auth/data/user_repository.dart';
 import 'package:moneymate/src/features/auth/domain/app_user.dart';
@@ -87,17 +88,26 @@ class FirebaseAuthRepository {
   }
 
   Future<AppUser?> signInWithGoogle() async {
-    final googleSignIn = GoogleSignIn();
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) return null; // User cancelled
+    final UserCredential userCredential;
 
-    final googleAuth = await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+    if (kIsWeb) {
+      // On web, use signInWithPopup directly
+      final provider = GoogleAuthProvider();
+      userCredential = await _auth.signInWithPopup(provider);
+    } else {
+      // On mobile, use GoogleSignIn package
+      final googleSignIn = GoogleSignIn();
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return null; // User cancelled
 
-    final userCredential = await _auth.signInWithCredential(credential);
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      userCredential = await _auth.signInWithCredential(credential);
+    }
+
     final firebaseUser = userCredential.user!;
 
     // Check if user doc exists, create if first time
