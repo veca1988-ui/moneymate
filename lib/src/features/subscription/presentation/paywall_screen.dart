@@ -36,8 +36,8 @@ class PaywallScreen extends ConsumerWidget {
             const SizedBox(height: Sizes.p32),
             const _FeatureRow(text: 'Unlimited expenses (free: 50/month)'),
             const _FeatureRow(text: 'Full Reports history (free: current month only)'),
-            const _FeatureRow(text: 'CSV export (coming soon)'),
-            const _FeatureRow(text: 'Budget alerts (coming soon)'),
+            const _FeatureRow(text: 'CSV export'),
+            const _FeatureRow(text: 'Budget alerts'),
             const _FeatureRow(text: 'Priority support'),
             const SizedBox(height: Sizes.p24),
             // Free vs Premium comparison
