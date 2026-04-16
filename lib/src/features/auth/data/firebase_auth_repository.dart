@@ -132,6 +132,33 @@ class FirebaseAuthRepository {
   Future<void> deleteAccount() async {
     final userId = currentUserId;
     if (userId != null) {
+      // Get user to check for couple
+      final user = await _userRepo.getUser(userId);
+      if (user?.coupleId != null && user!.coupleId!.isNotEmpty) {
+        // Null out coupleId on partner's user doc
+        final coupleDoc = await FirebaseFirestore.instance
+            .collection('couples')
+            .doc(user.coupleId)
+            .get();
+        if (coupleDoc.exists) {
+          final data = coupleDoc.data()!;
+          final partnerId = data['user1Id'] == userId
+              ? data['user2Id']
+              : data['user1Id'];
+          if (partnerId != null && partnerId.toString().isNotEmpty) {
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(partnerId)
+                .update({'coupleId': null});
+          }
+          // Delete the couple document
+          await FirebaseFirestore.instance
+              .collection('couples')
+              .doc(user.coupleId)
+              .delete();
+        }
+      }
+      // Delete user document and auth account
       await _userRepo.deleteUser(userId);
       await _auth.currentUser?.delete();
     }
