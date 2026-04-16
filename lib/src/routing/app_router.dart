@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/auth/presentation/login_screen.dart';
@@ -51,12 +52,14 @@ GoRouter goRouter(GoRouterRef ref) {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final coupleId = user?.coupleId;
           if (coupleId == null || coupleId.isEmpty) {
-            return const InvitePartnerScreen();
+            return _fadeTransitionPage(
+                child: const InvitePartnerScreen(), state: state);
           }
-          return DashboardScreen(coupleId: coupleId);
+          return _fadeTransitionPage(
+              child: DashboardScreen(coupleId: coupleId), state: state);
         },
       ),
       GoRoute(
@@ -74,10 +77,12 @@ GoRouter goRouter(GoRouterRef ref) {
       ),
       GoRoute(
         path: '/expenses/:coupleId',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final coupleId = state.pathParameters['coupleId']!;
           final month = state.uri.queryParameters['month'] ?? _currentMonth();
-          return ExpensesListScreen(coupleId: coupleId, month: month);
+          return _fadeTransitionPage(
+              child: ExpensesListScreen(coupleId: coupleId, month: month),
+              state: state);
         },
       ),
       GoRoute(
@@ -88,8 +93,9 @@ GoRouter goRouter(GoRouterRef ref) {
       ),
       GoRoute(
         path: '/reports/:coupleId',
-        builder: (context, state) => ReportsScreen(
-          coupleId: state.pathParameters['coupleId']!,
+        pageBuilder: (context, state) => _fadeTransitionPage(
+          child: ReportsScreen(coupleId: state.pathParameters['coupleId']!),
+          state: state,
         ),
       ),
       GoRoute(
@@ -104,7 +110,10 @@ GoRouter goRouter(GoRouterRef ref) {
       ),
       GoRoute(
         path: '/settings',
-        builder: (context, state) => const SettingsScreen(),
+        pageBuilder: (context, state) => _fadeTransitionPage(
+          child: const SettingsScreen(),
+          state: state,
+        ),
       ),
       GoRoute(
         path: '/settings/profile',
@@ -131,4 +140,17 @@ GoRouter goRouter(GoRouterRef ref) {
 String _currentMonth() {
   final now = DateTime.now();
   return '${now.year}-${now.month.toString().padLeft(2, '0')}';
+}
+
+CustomTransitionPage<void> _fadeTransitionPage({
+  required Widget child,
+  required GoRouterState state,
+}) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
 }
