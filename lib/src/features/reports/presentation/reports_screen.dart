@@ -43,17 +43,20 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   String get _monthKey => DateFormat('yyyy-MM').format(_selectedMonth);
 
-  void _previousMonth() async {
+  Future<void> _previousMonth() async {
     final isPremium = await ref.read(isPremiumProvider.future);
     if (!isPremium) {
       if (mounted) {
-        showDialog(
+        await showDialog<void>(
           context: context,
           builder: (ctx) => AlertDialog(
             title: const Text('Premium Feature'),
             content: const Text('View past months with MoneyMate Premium.'),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Cancel'),
+              ),
               TextButton(
                 onPressed: () {
                   Navigator.pop(ctx);
@@ -88,8 +91,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   Future<void> _exportCsv(List<Expense> expenses, String currency) async {
-    final buffer = StringBuffer();
-    buffer.writeln('Date,Category,Amount,Note,Added By,Visibility');
+    final buffer = StringBuffer()
+      ..writeln('Date,Category,Amount,Note,Added By,Visibility');
     for (final e in expenses) {
       final date = DateFormat('yyyy-MM-dd').format(e.date);
       final amount = e.amount.toStringAsFixed(2);

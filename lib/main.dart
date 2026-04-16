@@ -10,7 +10,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // TODO: Initialize RevenueCat after updating Xcode
+  // TODO(veka): Initialize RevenueCat after updating Xcode
   // await Purchases.setLogLevel(LogLevel.debug);
   // final apiKey = Platform.isIOS ? 'APPLE_KEY' : 'GOOGLE_KEY';
   // await Purchases.configure(PurchasesConfiguration(apiKey));

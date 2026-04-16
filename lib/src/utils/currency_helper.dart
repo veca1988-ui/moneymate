@@ -1,11 +1,11 @@
 class CurrencyHelper {
   static const _symbols = {
-    'USD': '\$',
+    'USD': r'$',
     'EUR': '€',
     'GBP': '£',
     'RSD': 'RSD',
-    'CAD': 'C\$',
-    'AUD': 'A\$',
+    'CAD': r'C$',
+    'AUD': r'A$',
   };
 
   static const _noDecimals = {'RSD'};

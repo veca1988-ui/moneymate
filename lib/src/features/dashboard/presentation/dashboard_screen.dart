@@ -146,7 +146,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               color: daysLeft <= 3
                                   ? AppColors.expense
                                   : AppColors.warning,
-                              width: 1,
                             ),
                           ),
                           child: Row(
@@ -188,12 +187,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   .textTheme
                                   .bodyMedium
                                   ?.copyWith(
-                                      color: AppColors.textSecondary),
+                                    color: AppColors.textSecondary,
+                                  ),
                             ),
                             const SizedBox(height: Sizes.p8),
                             Text(
                               CurrencyHelper.formatAmount(
-                                  totalSpent, currency),
+                                totalSpent,
+                                currency,
+                              ),
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineLarge
@@ -205,7 +207,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             FutureBuilder<bool>(
                               future: ref.read(isPremiumProvider.future),
                               builder: (context, premiumSnapshot) {
-                                if (premiumSnapshot.data == true) {
+                                if (premiumSnapshot.data ?? false) {
                                   return const SizedBox.shrink();
                                 }
                                 return Text(
@@ -241,7 +243,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       stream: ref
                           .read(budgetsRepositoryProvider)
                           .watchBudgets(
-                              coupleId: widget.coupleId, month: month),
+                            coupleId: widget.coupleId,
+                            month: month,
+                          ),
                       builder: (context, budgetSnapshot) {
                         final budgets = budgetSnapshot.data ?? [];
 
@@ -256,9 +260,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                        'Budget exceeded for ${budget.category}!'),
+                                      'Budget exceeded for ${budget.category}!',
+                                    ),
                                     backgroundColor: AppColors.expense,
-                                    duration: const Duration(seconds: 4),
                                   ),
                                 );
                               }
@@ -272,7 +276,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               padding: EdgeInsets.all(Sizes.p24),
                               child: Center(
                                 child: Text(
-                                    'No budgets set. Tap + to create one.'),
+                                  'No budgets set. Tap + to create one.',
+                                ),
                               ),
                             ),
                           );
@@ -332,7 +337,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             destinations: const [
               NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
               NavigationDestination(
-                  icon: Icon(Icons.list), label: 'Expenses'),
+                icon: Icon(Icons.list),
+                label: 'Expenses',
+              ),
               NavigationDestination(
                 icon: Icon(Icons.pie_chart),
                 label: 'Reports',

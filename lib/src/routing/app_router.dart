@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/auth/presentation/login_screen.dart';
 import 'package:moneymate/src/features/auth/presentation/register_screen.dart';
+import 'package:moneymate/src/features/budgets/presentation/add_budget_screen.dart';
 import 'package:moneymate/src/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
 import 'package:moneymate/src/features/expenses/presentation/add_expense_screen.dart';
@@ -10,11 +11,10 @@ import 'package:moneymate/src/features/expenses/presentation/expenses_list_scree
 import 'package:moneymate/src/features/onboarding/presentation/accept_invite_screen.dart';
 import 'package:moneymate/src/features/onboarding/presentation/invite_partner_screen.dart';
 import 'package:moneymate/src/features/onboarding/presentation/onboarding_screen.dart';
+import 'package:moneymate/src/features/reports/presentation/reports_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/privacy_settings_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/profile_screen.dart';
 import 'package:moneymate/src/features/settings/presentation/settings_screen.dart';
-import 'package:moneymate/src/features/budgets/presentation/add_budget_screen.dart';
-import 'package:moneymate/src/features/reports/presentation/reports_screen.dart';
 import 'package:moneymate/src/features/subscription/presentation/paywall_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -56,10 +56,14 @@ GoRouter goRouter(GoRouterRef ref) {
           final coupleId = user?.coupleId;
           if (coupleId == null || coupleId.isEmpty) {
             return _fadeTransitionPage(
-                child: const InvitePartnerScreen(), state: state);
+              child: const InvitePartnerScreen(),
+              state: state,
+            );
           }
           return _fadeTransitionPage(
-              child: DashboardScreen(coupleId: coupleId), state: state);
+            child: DashboardScreen(coupleId: coupleId),
+            state: state,
+          );
         },
       ),
       GoRoute(
@@ -81,8 +85,9 @@ GoRouter goRouter(GoRouterRef ref) {
           final coupleId = state.pathParameters['coupleId']!;
           final month = state.uri.queryParameters['month'] ?? _currentMonth();
           return _fadeTransitionPage(
-              child: ExpensesListScreen(coupleId: coupleId, month: month),
-              state: state);
+            child: ExpensesListScreen(coupleId: coupleId, month: month),
+            state: state,
+          );
         },
       ),
       GoRoute(

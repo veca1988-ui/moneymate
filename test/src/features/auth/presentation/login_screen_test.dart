@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:moneymate/src/features/auth/presentation/login_screen.dart';
 import 'package:moneymate/src/features/auth/presentation/auth_controller.dart';
+import 'package:moneymate/src/features/auth/presentation/login_screen.dart';
 
 void main() {
   Widget createLoginScreen() {
     return ProviderScope(
       overrides: [
-        authControllerProvider.overrideWith(() => AuthController()),
+        authControllerProvider.overrideWith(AuthController.new),
       ],
       child: const MaterialApp(
         home: LoginScreen(),

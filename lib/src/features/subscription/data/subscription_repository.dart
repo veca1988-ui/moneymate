@@ -11,13 +11,13 @@ SubscriptionRepository subscriptionRepository(
 
 @riverpod
 Future<bool> isPremium(IsPremiumRef ref) async {
-  // TODO: Re-enable with RevenueCat after Xcode update
+  // TODO(veka): Re-enable with RevenueCat after Xcode update
   return false;
 }
 
 class SubscriptionRepository {
   Future<bool> isPremium() async {
-    // TODO: Re-enable with RevenueCat after Xcode update
+    // TODO(veka): Re-enable with RevenueCat after Xcode update
     return false;
   }
 }

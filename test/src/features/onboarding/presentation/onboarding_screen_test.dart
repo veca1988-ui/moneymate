@@ -25,7 +25,8 @@ void main() {
 
       expect(
         find.text(
-            'Share expenses with your partner and stay on top of your finances'),
+          'Share expenses with your partner and stay on top of your finances',
+        ),
         findsOneWidget,
       );
     });

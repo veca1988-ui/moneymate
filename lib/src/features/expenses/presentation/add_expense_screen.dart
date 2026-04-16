@@ -102,7 +102,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
           .first;
       if (expenses.length >= 50) {
         if (mounted) {
-          context.push('/subscription');
+          await context.push('/subscription');
         }
         return;
       }
@@ -140,7 +140,8 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Failed to save expense. Please try again.')),
+            content: Text('Failed to save expense. Please try again.'),
+          ),
         );
       }
     }

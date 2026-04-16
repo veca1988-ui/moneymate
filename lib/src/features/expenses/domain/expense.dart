@@ -37,10 +37,10 @@ class Expense with _$Expense {
 
 extension ExpenseFirestore on Expense {
   Map<String, dynamic> toFirestore() {
-    final json = toJson();
-    json.remove('id');
-    json['date'] = Timestamp.fromDate(date);
-    json['createdAt'] = Timestamp.fromDate(createdAt);
+    final json = toJson()
+      ..remove('id')
+      ..['date'] = Timestamp.fromDate(date)
+      ..['createdAt'] = Timestamp.fromDate(createdAt);
     return json;
   }
 }

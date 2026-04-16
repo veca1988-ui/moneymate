@@ -54,8 +54,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text(
-                            'Password reset email sent! Check your inbox.')),
+                      content: Text(
+                        'Password reset email sent! Check your inbox.',
+                      ),
+                    ),
                   );
                 }
               } catch (e) {
@@ -138,7 +140,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Apple Sign-In coming soon!')),
+                        content: Text('Apple Sign-In coming soon!'),
+                      ),
                     );
                   },
                   icon: const Icon(Icons.apple, color: Colors.white),
@@ -158,8 +161,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               .read(authControllerProvider.notifier)
                               .signInWithGoogle();
                         },
-                  icon: const Icon(Icons.g_mobiledata,
-                      size: 24, color: Color(0xFF4285F4)),
+                  icon: const Icon(
+                    Icons.g_mobiledata,
+                    size: 24,
+                    color: Color(0xFF4285F4),
+                  ),
                   label: const Text('Continue with Google'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.black87,
@@ -173,7 +179,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const Expanded(child: Divider()),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: Sizes.p16),
+                        horizontal: Sizes.p16,
+                      ),
                       child: Text(
                         'or',
                         style: Theme.of(context)

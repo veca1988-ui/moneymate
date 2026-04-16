@@ -130,14 +130,16 @@ class SettingsScreen extends ConsumerWidget {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Partner unlinked successfully')),
+                        content: Text('Partner unlinked successfully'),
+                      ),
                     );
                   }
                 } catch (e) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Something went wrong. Please try again.')),
+                        content: Text('Something went wrong. Please try again.'),
+                      ),
                     );
                   }
                 }
@@ -175,7 +177,8 @@ class SettingsScreen extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('Something went wrong. Please try again.')),
+                      content: Text('Something went wrong. Please try again.'),
+                    ),
                   );
                 }
               }

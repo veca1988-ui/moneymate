@@ -68,30 +68,29 @@ class CouplesRepositoryImpl implements CouplesRepository {
       final trialEnd = now.add(const Duration(days: 14));
       final coupleRef = _firestore.collection('couples').doc();
 
-      transaction.set(coupleRef, {
-        'user1Id': creatorUserId,
-        'user2Id': userId,
-        'createdAt': FieldValue.serverTimestamp(),
-        'subscriptionStatus': 'trial',
-        'trialStartDate': Timestamp.fromDate(now),
-        'trialEndDate': Timestamp.fromDate(trialEnd),
-        'subscriberUserId': null,
-        'expiresAt': null,
-      });
-
-      transaction.update(
-        _firestore.collection('users').doc(creatorUserId),
-        {'coupleId': coupleRef.id},
-      );
-      transaction.update(
-        _firestore.collection('users').doc(userId),
-        {'coupleId': coupleRef.id},
-      );
-
-      transaction.update(inviteDoc.reference, {
-        'used': true,
-        'coupleId': coupleRef.id,
-      });
+      transaction
+        ..set(coupleRef, {
+          'user1Id': creatorUserId,
+          'user2Id': userId,
+          'createdAt': FieldValue.serverTimestamp(),
+          'subscriptionStatus': 'trial',
+          'trialStartDate': Timestamp.fromDate(now),
+          'trialEndDate': Timestamp.fromDate(trialEnd),
+          'subscriberUserId': null,
+          'expiresAt': null,
+        })
+        ..update(
+          _firestore.collection('users').doc(creatorUserId),
+          {'coupleId': coupleRef.id},
+        )
+        ..update(
+          _firestore.collection('users').doc(userId),
+          {'coupleId': coupleRef.id},
+        )
+        ..update(inviteDoc.reference, {
+          'used': true,
+          'coupleId': coupleRef.id,
+        });
 
       return Couple(
         id: coupleRef.id,
@@ -126,16 +125,15 @@ class CouplesRepositoryImpl implements CouplesRepository {
     final couple = await getCouple(coupleId);
     if (couple == null) return;
 
-    final batch = _firestore.batch();
-
-    batch.update(
-      _firestore.collection('users').doc(couple.user1Id),
-      {'coupleId': null},
-    );
-    batch.update(
-      _firestore.collection('users').doc(couple.user2Id),
-      {'coupleId': null},
-    );
+    final batch = _firestore.batch()
+      ..update(
+        _firestore.collection('users').doc(couple.user1Id),
+        {'coupleId': null},
+      )
+      ..update(
+        _firestore.collection('users').doc(couple.user2Id),
+        {'coupleId': null},
+      );
 
     await batch.commit();
 
@@ -190,9 +188,10 @@ class CouplesRepositoryImpl implements CouplesRepository {
       'expiresAt': null,
     });
 
-    await _firestore.collection('users').doc(userId).set({
-      'coupleId': coupleRef.id,
-    }, SetOptions(merge: true));
+    await _firestore.collection('users').doc(userId).set(
+      {'coupleId': coupleRef.id},
+      SetOptions(merge: true),
+    );
 
     return Couple(
       id: coupleRef.id,

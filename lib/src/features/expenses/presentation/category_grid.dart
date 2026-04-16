@@ -55,7 +55,7 @@ class CategoryGrid extends StatelessWidget {
                       )
                     : null,
                 child: Center(
-                  child: CategoryIcon(category: name, size: 40),
+                  child: CategoryIcon(category: name),
                 ),
               ),
               const SizedBox(height: Sizes.p4),
@@ -65,8 +65,7 @@ class CategoryGrid extends StatelessWidget {
                       color: isSelected
                           ? AppColors.textPrimary
                           : AppColors.textSecondary,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected ? FontWeight.bold : null,
                     ),
                 overflow: TextOverflow.ellipsis,
               ),

@@ -78,7 +78,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Apple Sign-In coming soon!')),
+                        content: Text('Apple Sign-In coming soon!'),
+                      ),
                     );
                   },
                   icon: const Icon(Icons.apple, color: Colors.white),
@@ -98,8 +99,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               .read(authControllerProvider.notifier)
                               .signInWithGoogle();
                         },
-                  icon: const Icon(Icons.g_mobiledata,
-                      size: 24, color: Color(0xFF4285F4)),
+                  icon: const Icon(
+                    Icons.g_mobiledata,
+                    size: 24,
+                    color: Color(0xFF4285F4),
+                  ),
                   label: const Text('Continue with Google'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.black87,
@@ -113,7 +117,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     const Expanded(child: Divider()),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: Sizes.p16),
+                        horizontal: Sizes.p16,
+                      ),
                       child: Text(
                         'or',
                         style: Theme.of(context)
