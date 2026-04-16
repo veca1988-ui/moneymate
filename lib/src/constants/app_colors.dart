@@ -25,13 +25,13 @@ class AppColors {
 
   // Category colors
   static const List<Color> categoryColors = [
-    Color(0xFF4CAF50), // Groceries
-    Color(0xFFFF9800), // Dining
-    Color(0xFF2196F3), // Transport
-    Color(0xFF9C27B0), // Bills
-    Color(0xFFE91E63), // Entertainment
-    Color(0xFF00BCD4), // Shopping
-    Color(0xFFFF5722), // Health
-    Color(0xFF607D8B), // Other
+    Color(0xFF8BA87E), // Groceries — sage green
+    Color(0xFFC4956A), // Dining — warm peach
+    Color(0xFF7FA5C2), // Transport — soft blue
+    Color(0xFF9B8BB4), // Bills — muted purple
+    Color(0xFFC08393), // Entertainment — dusty rose
+    Color(0xFF7BAFAF), // Shopping — teal
+    Color(0xFFCB8E6E), // Health — warm terracotta
+    Color(0xFF8E9AA0), // Other — cool grey
   ];
 }

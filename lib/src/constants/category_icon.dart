@@ -33,21 +33,21 @@ class CategoryIcon extends StatelessWidget {
   static _CategoryConfig _categoryConfig(String category) {
     switch (category) {
       case 'Groceries':
-        return _CategoryConfig(Icons.shopping_cart, Color(0xFF4CAF50));
+        return _CategoryConfig(Icons.shopping_cart, Color(0xFF8BA87E));
       case 'Dining':
-        return _CategoryConfig(Icons.restaurant, Color(0xFFFF9800));
+        return _CategoryConfig(Icons.restaurant, Color(0xFFC4956A));
       case 'Transport':
-        return _CategoryConfig(Icons.directions_car, Color(0xFF2196F3));
+        return _CategoryConfig(Icons.directions_car, Color(0xFF7FA5C2));
       case 'Bills':
-        return _CategoryConfig(Icons.receipt_long, Color(0xFF9C27B0));
+        return _CategoryConfig(Icons.receipt_long, Color(0xFF9B8BB4));
       case 'Entertainment':
-        return _CategoryConfig(Icons.movie, Color(0xFFE91E63));
+        return _CategoryConfig(Icons.movie, Color(0xFFC08393));
       case 'Shopping':
-        return _CategoryConfig(Icons.shopping_bag, Color(0xFF00BCD4));
+        return _CategoryConfig(Icons.shopping_bag, Color(0xFF7BAFAF));
       case 'Health':
-        return _CategoryConfig(Icons.medical_services, Color(0xFFFF5722));
+        return _CategoryConfig(Icons.medical_services, Color(0xFFCB8E6E));
       default:
-        return _CategoryConfig(Icons.more_horiz, Color(0xFF607D8B));
+        return _CategoryConfig(Icons.more_horiz, Color(0xFF8E9AA0));
     }
   }
 }
