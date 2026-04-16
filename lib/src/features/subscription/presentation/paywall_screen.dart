@@ -82,26 +82,35 @@ class PaywallScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: Sizes.p24),
+            Text(
+              'All premium features are free during the beta period.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                    fontStyle: FontStyle.italic,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: Sizes.p16),
             ElevatedButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Coming soon — enjoy all features free during beta!'),
+                    content: Text('All features are free during beta! Enjoy!'),
                   ),
                 );
               },
-              child: const Text(r'Annual — $34.99/year (Save 27%)'),
+              child: const Text('Start Free Trial'),
             ),
             const SizedBox(height: Sizes.p12),
             OutlinedButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Coming soon — enjoy all features free during beta!'),
+                    content: Text('All features are free during beta! Enjoy!'),
                   ),
                 );
               },
-              child: const Text(r'Monthly — $3.99/month'),
+              child: const Text('Notify me when Premium launches'),
             ),
             const SizedBox(height: Sizes.p16),
             TextButton(
