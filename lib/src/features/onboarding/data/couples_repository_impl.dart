@@ -138,6 +138,10 @@ class CouplesRepositoryImpl implements CouplesRepository {
     );
 
     await batch.commit();
+
+    // Delete the couple document (expenses and budgets subcollections
+    // are kept for data retention but become inaccessible)
+    await _firestore.collection('couples').doc(coupleId).delete();
   }
 
   @override
