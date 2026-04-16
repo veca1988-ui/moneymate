@@ -6,6 +6,7 @@ import 'package:moneymate/src/constants/app_sizes.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/auth/presentation/auth_controller.dart';
 import 'package:moneymate/src/features/onboarding/data/couples_repository_impl.dart';
+import 'package:moneymate/src/features/onboarding/domain/couple.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -39,11 +40,22 @@ class SettingsScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push('/invite'),
           ),
-          ListTile(
-            leading: const Icon(Icons.link_off),
-            title: const Text('Unlink Partner'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => _showUnlinkDialog(context, ref, coupleId),
+          StreamBuilder<Couple?>(
+            stream: coupleId.isNotEmpty
+                ? ref.read(couplesRepositoryProvider).watchCouple(coupleId)
+                : const Stream.empty(),
+            builder: (context, snapshot) {
+              final couple = snapshot.data;
+              final hasPartner =
+                  couple != null && couple.user2Id.isNotEmpty;
+              if (!hasPartner) return const SizedBox.shrink();
+              return ListTile(
+                leading: const Icon(Icons.link_off),
+                title: const Text('Unlink Partner'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _showUnlinkDialog(context, ref, coupleId),
+              );
+            },
           ),
           const Divider(),
           const _SectionHeader(title: 'Subscription'),
