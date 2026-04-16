@@ -10,6 +10,7 @@ import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.da
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
 import 'package:moneymate/src/features/subscription/data/subscription_repository.dart';
 import 'package:moneymate/src/utils/currency_helper.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ReportsScreen extends ConsumerStatefulWidget {
   const ReportsScreen({
@@ -25,6 +26,8 @@ class ReportsScreen extends ConsumerStatefulWidget {
 
 class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   late DateTime _selectedMonth;
+  List<Expense> _currentExpenses = [];
+  String _currentCurrency = 'USD';
 
   @override
   void initState() {
@@ -77,15 +80,41 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     }
   }
 
+  Future<void> _exportCsv(List<Expense> expenses, String currency) async {
+    final buffer = StringBuffer();
+    buffer.writeln('Date,Category,Amount,Note,Added By,Visibility');
+    for (final e in expenses) {
+      final date = DateFormat('yyyy-MM-dd').format(e.date);
+      final amount = e.amount.toStringAsFixed(2);
+      final note = e.note.replaceAll(',', ';'); // escape commas
+      buffer.writeln('$date,${e.category},$amount,$note,${e.userName},${e.visibility}');
+    }
+
+    await Share.share(
+      buffer.toString(),
+      subject: 'MoneyMate Expenses Export',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateChangesProvider).valueOrNull;
     final currency = user?.currency ?? 'USD';
     final monthDisplay = DateFormat('MMMM yyyy').format(_selectedMonth);
 
+    _currentCurrency = currency;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Reports'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: _currentExpenses.isEmpty
+                ? null
+                : () => _exportCsv(_currentExpenses, _currentCurrency),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -102,6 +131,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                   .watchExpenses(coupleId: widget.coupleId, month: _monthKey),
               builder: (context, snapshot) {
                 final expenses = snapshot.data ?? [];
+                _currentExpenses = expenses;
 
                 if (expenses.isEmpty) {
                   return const Center(
