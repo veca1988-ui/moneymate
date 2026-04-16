@@ -33,6 +33,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _showTutorial = false;
   int _selectedIndex = 0;
+  final Set<String> _notifiedBudgets = {};
 
   @override
   void initState() {
@@ -224,6 +225,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               coupleId: widget.coupleId, month: month),
                       builder: (context, budgetSnapshot) {
                         final budgets = budgetSnapshot.data ?? [];
+
+                        for (final budget in budgets) {
+                          final spent =
+                              categoryTotals[budget.category] ?? 0;
+                          if (spent >= budget.limit &&
+                              !_notifiedBudgets.contains(budget.category)) {
+                            _notifiedBudgets.add(budget.category);
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Budget exceeded for ${budget.category}!'),
+                                    backgroundColor: AppColors.expense,
+                                    duration: const Duration(seconds: 4),
+                                  ),
+                                );
+                              }
+                            });
+                          }
+                        }
 
                         if (budgets.isEmpty) {
                           return const Card(
