@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/constants/category_icon.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
@@ -171,14 +172,7 @@ class _ExpenseListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(
-        backgroundColor: AppColors.primary.withOpacity(0.1),
-        child: Icon(
-          _categoryIcon(expense.category),
-          color: AppColors.primary,
-          size: 20,
-        ),
-      ),
+      leading: CategoryIcon(category: expense.category),
       title: Text(expense.category),
       subtitle: _buildSubtitle(context),
       trailing: Row(
@@ -227,16 +221,4 @@ class _ExpenseListTile extends StatelessWidget {
     );
   }
 
-  IconData _categoryIcon(String category) {
-    return switch (category) {
-      'Groceries' => Icons.shopping_cart,
-      'Dining' => Icons.restaurant,
-      'Transport' => Icons.directions_car,
-      'Bills' => Icons.receipt,
-      'Entertainment' => Icons.movie,
-      'Shopping' => Icons.shopping_bag,
-      'Health' => Icons.medical_services,
-      _ => Icons.category,
-    };
-  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/constants/category_icon.dart';
 import 'package:moneymate/src/features/budgets/domain/budget.dart';
 import 'package:moneymate/src/utils/currency_helper.dart';
 
@@ -39,9 +40,15 @@ class BudgetProgressCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  budget.category,
-                  style: Theme.of(context).textTheme.titleSmall,
+                Row(
+                  children: [
+                    CategoryIcon(category: budget.category, size: 32),
+                    const SizedBox(width: 8),
+                    Text(
+                      budget.category,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  ],
                 ),
                 Text(
                   '${CurrencyHelper.formatAmount(spent, currency)} / '

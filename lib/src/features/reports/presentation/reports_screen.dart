@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/constants/category_icon.dart';
 import 'package:moneymate/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:moneymate/src/features/expenses/data/expenses_repository_impl.dart';
 import 'package:moneymate/src/features/expenses/domain/expense.dart';
@@ -281,11 +282,17 @@ class _CategoryRow extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                category,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+              Row(
+                children: [
+                  CategoryIcon(category: category, size: 32),
+                  const SizedBox(width: 8),
+                  Text(
+                    category,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                ],
               ),
               Text(
                 '${CurrencyHelper.formatAmount(amount, currency)} ($percentageText)',

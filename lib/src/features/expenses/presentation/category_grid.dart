@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/constants/category_icon.dart';
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({
@@ -13,14 +14,14 @@ class CategoryGrid extends StatelessWidget {
   final ValueChanged<String> onCategorySelected;
 
   static const _categories = [
-    ('Groceries', Icons.shopping_cart),
-    ('Dining', Icons.restaurant),
-    ('Transport', Icons.directions_car),
-    ('Bills', Icons.receipt_long),
-    ('Entertainment', Icons.movie),
-    ('Shopping', Icons.shopping_bag),
-    ('Health', Icons.local_hospital),
-    ('Other', Icons.more_horiz),
+    'Groceries',
+    'Dining',
+    'Transport',
+    'Bills',
+    'Entertainment',
+    'Shopping',
+    'Health',
+    'Other',
   ];
 
   @override
@@ -35,7 +36,7 @@ class CategoryGrid extends StatelessWidget {
       ),
       itemCount: _categories.length,
       itemBuilder: (context, index) {
-        final (name, icon) = _categories[index];
+        final name = _categories[index];
         final isSelected = selectedCategory == name;
         final color = AppColors.categoryColors[index];
 
@@ -47,13 +48,14 @@ class CategoryGrid extends StatelessWidget {
               Container(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(
-                  color: isSelected ? color : color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(Sizes.p12),
-                ),
-                child: Icon(
-                  icon,
-                  color: isSelected ? Colors.white : color,
+                decoration: isSelected
+                    ? BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(Sizes.p12),
+                      )
+                    : null,
+                child: Center(
+                  child: CategoryIcon(category: name, size: 40),
                 ),
               ),
               const SizedBox(height: Sizes.p4),

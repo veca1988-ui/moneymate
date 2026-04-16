@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:moneymate/src/constants/app_colors.dart';
 import 'package:moneymate/src/constants/app_sizes.dart';
+import 'package:moneymate/src/constants/category_icon.dart';
 import 'package:moneymate/src/utils/currency_helper.dart';
 
 class SpendingPieChart extends StatelessWidget {
@@ -63,15 +64,7 @@ class SpendingPieChart extends StatelessWidget {
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: AppColors.categoryColors[
-                            index % AppColors.categoryColors.length],
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
+                    CategoryIcon(category: category, size: 24),
                     const SizedBox(width: 4),
                     Text(
                       '$category: ${CurrencyHelper.formatAmount(amount, currency)}',
