@@ -61,22 +61,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Apple Sign-In coming soon!')),
-                    );
-                  },
-                  icon: const Icon(Icons.apple, color: Colors.white),
-                  label: const Text('Continue with Apple'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(double.infinity, 48),
-                  ),
-                ),
-                const SizedBox(height: Sizes.p16),
                 OutlinedButton.icon(
                   onPressed: state.isLoading
                       ? null
