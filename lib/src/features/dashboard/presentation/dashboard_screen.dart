@@ -32,6 +32,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _showTutorial = false;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -286,6 +287,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             child: const Icon(Icons.add),
           ),
           bottomNavigationBar: NavigationBar(
+            selectedIndex: _selectedIndex,
             destinations: const [
               NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
               NavigationDestination(
@@ -302,13 +304,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             onDestinationSelected: (index) {
               switch (index) {
                 case 0:
-                  break; // Already on Home
+                  break;
                 case 1:
-                  context.push('/expenses/${widget.coupleId}');
+                  setState(() => _selectedIndex = 1);
+                  context.push('/expenses/${widget.coupleId}').then((_) {
+                    if (mounted) setState(() => _selectedIndex = 0);
+                  });
                 case 2:
-                  context.push('/reports/${widget.coupleId}');
+                  setState(() => _selectedIndex = 2);
+                  context.push('/reports/${widget.coupleId}').then((_) {
+                    if (mounted) setState(() => _selectedIndex = 0);
+                  });
                 case 3:
-                  context.push('/settings');
+                  setState(() => _selectedIndex = 3);
+                  context.push('/settings').then((_) {
+                    if (mounted) setState(() => _selectedIndex = 0);
+                  });
               }
             },
           ),
